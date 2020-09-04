@@ -24,9 +24,13 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "/home/sowmya/trackIt/trackItFrontEnd/src/styles.css",
+              "/home/sowmya/trackIt/trackItFrontEnd/node_modules/bootstrap/dist/css/bootstrap.min.css"
             ],
-            "scripts": []
+            "scripts": [
+              "/home/sowmya/trackIt/trackItFrontEnd/node_modules/jquery/dist/jquery.min.js",
+              "/home/sowmya/trackIt/trackItFrontEnd/node_modules/bootstrap/dist/js/bootstrap.min.js"
+            ]
           },
           "configurations": {
             "production": {

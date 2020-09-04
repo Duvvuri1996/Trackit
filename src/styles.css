@@ -1,1 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
+body {
+    background-color: "aqua";
+    /*background: url("/home/sowmya/trackIt/trackItFrontEnd/src/assets/trackIt.jpg");
+    background-position: center;
+    background-repeat: no-repeat;*/
+}

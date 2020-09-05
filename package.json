@@ -21,7 +21,9 @@
     "@angular/router": "~10.1.0",
     "bootstrap": "^4.5.2",
     "jquery": "^3.5.1",
-    "rxjs": "~6.6.0",
+    "ng2-cookies": "^1.0.12",
+    "rxjs": "^6.6.2",
+    "socket.io-client": "^2.3.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"
   },

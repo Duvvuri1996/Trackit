@@ -3,7 +3,7 @@ import { AppService } from '../../app.service';
 import { Router } from '@angular/router';
 import { ToastrManager} from 'ng6-toastr-notifications';
 import * as countryNames from '../../../assets/countryNames.json';
-import { ThrowStmt } from '@angular/compiler';
+import { Cookie } from 'ng2-cookies/ng2-cookies';
 
 @Component({
   selector: 'app-signup',
@@ -61,7 +61,13 @@ export class SignupComponent implements OnInit {
       }
       this.appService.signUp(data).subscribe((apiResponse) => {
         if(apiResponse.status === 200) {
+          Cookie.set('authToken', apiResponse.data.authToken)
+          Cookie.set('receiverId', apiResponse.data.userDetails.userId)
+          Cookie.set('receiverName', apiResponse.data.userDetails.userName)
+          this.appService.setUserInfoInLocalStorage(apiResponse.data.userDetails)
+
           this.toastr.successToastr('Signup successfull')
+          
           setTimeout(() => {
             this.router.navigate(['/userdashboard'])
           }, 2000)

@@ -68,19 +68,19 @@ export class AppService {
     return this.http.get('/api/logout')
   }
 
-  public allUsers(authToken) : Observable<any> {
-    return this.http.get(`${this.url}/user/allusers?authToken=${authToken}`)
+  public allUsers() : Observable<any> {
+    return this.http.get(`${this.url}/user/allusers`)
   }
 
   public singleUser(data) : Observable<any> {
-    return this.http.get(`${this.url}/user/singleuser/${data.userId}?authToken=${data.authToken}`)
+    return this.http.get(`${this.url}/user/singleuser/${data.userId}`)
   }
 
-  public socialUsers(authToken) : Observable<any> {
-    return this.http.get(`${this.url}/user/allSocialUsers?authToken=${authToken}`)
+  public socialUsers() : Observable<any> {
+    return this.http.get(`${this.url}/user/allSocialUsers`)
   }
 
-  public createIssue(data, authToken) : Observable<any> {
+  public createIssue(data) : Observable<any> {
     const params = new HttpParams()
     .set('userId', data.userId)
     .set('userName', data.userName)
@@ -90,14 +90,12 @@ export class AppService {
     .set('issueTitle', data.issueTitle)
     .set('issueDescription', data.issueDescription)
     .set('images', data.images)
-    .set('authToken', authToken)
     return this.http.post(`${this.url}/issue/create`, params)
   }
 
-  public deleteIssue(issueId, authToken) : Observable<any> {
-    const params = new HttpParams()
-      .set('authToken', authToken)
-      return this.http.post(`${this.url}/issue/delete/${issueId}`, params)
+  public deleteIssue(issueId) : Observable<any> {
+    let data = {}
+      return this.http.post(`${this.url}/issue/delete/${issueId}`, data)
   }
 
   public editIssue(data) : Observable<any> {
@@ -108,54 +106,50 @@ export class AppService {
     .set('issueTitle', data.issueTitle)
     .set('issueDescription', data.issueDescription)
     .set('images', data.images)
-    .set('authToken', data.authToken)
     return this.http.put(`${this.url}/issue/edit/${data.issueId}`, params)
   }
 
-  public getAllIssues(authToken) : Observable<any> {
-    return this.http.get(`${this.url}/issue/allIssues?authToken=${authToken}`)
+  public getAllIssues() : Observable<any> {
+    return this.http.get(`${this.url}/issue/allIssues`)
   }
 
-  public singleIssue(issueId, authToken) : Observable<any> {
-    return this.http.get(`${this.url}/issue/${issueId}?authToken=${authToken}`)
+  public singleIssue(issueId) : Observable<any> {
+    return this.http.get(`${this.url}/issue/${issueId}`)
   }
 
-  public issueByUserId(userId, authToken) : Observable<any> {
-    return this.http.get(`${this.url}/issue/userid/${userId}?authToken=${authToken}`)
+  public issueByUserId(userId) : Observable<any> {
+    return this.http.get(`${this.url}/issue/userid/${userId}`)
   }
 
-  public issueByAssigneeId(assigneeId, authToken) :Observable<any> {
-    return this.http.get(`${this.url}/issue/assigneeid/${assigneeId}?authToken=${authToken}`)
+  public issueByAssigneeId(assigneeId) :Observable<any> {
+    return this.http.get(`${this.url}/issue/assigneeid/${assigneeId}`)
   }
 
   public postWatch(data) : Observable<any> {
     const params = new HttpParams()
     .set('issueId', data.issueId)
     .set('watchId', Cookie.get('userId'))
-    .set('authToken', data.authToken)
     return this.http.post(`${this.url}/issue/watch`, params)
   }
 
-  public watchCount(issueId, authToken) : Observable<any> {
-    return this.http.get(`${this.url}/issue/watchcount/${issueId}?authToken=${authToken}`)
+  public watchCount(issueId) : Observable<any> {
+    return this.http.get(`${this.url}/issue/watchcount/${issueId}`)
   }
 
-  public watchOfUser(userId, authToken) : Observable<any> {
-    return this.http.get(`${this.url}/issue/watchofuser/${userId}?authToken=${authToken}`)
+  public watchOfUser(userId) : Observable<any> {
+    return this.http.get(`${this.url}/issue/watchofuser/${userId}`)
   }
 
 
-  public numOfDays(data) : Observable<any> {
+  public numOfDays(issueId) : Observable<any> {
     const params = new HttpParams()
-    .set('issueId', data.issueId)
-    .set('authToken', data.authToken)
+    .set('issueId', issueId)
     return this.http.post(`${this.url}/issue/numOfDays`, params)
   }
 
   public searchIssue(data) : Observable<any> {
     const params = new HttpParams()
     .set('search', data.search)
-    .set('authToken', data.authToken)
     return this.http.post(`${this.url}/issue/search`, params)
   }
 
@@ -165,25 +159,22 @@ export class AppService {
     .set('reporterName', data.reporterName)
     .set('issueId', data.issueId)
     .set('comment', data.comment)
-    .set('authToken', data.authToken)
     return this.http.post(`${this.url}/issue/createcomment`, params)
   }
 
   public editComment(data) : Observable<any> {
     const params = new HttpParams()
     .set('comment', data.comment)
-    .set('authToken', data.authToken)
     return this.http.put(`${this.url}/issue/editcomment/${data.commentId}`, data)
   }
 
-  public deleteComment(commentId, authToken) : Observable<any> {
-    const params = new HttpParams()
-    .set('authToken', authToken)
-    return this.http.post(`${this.url}/issue/deletecomment/${commentId}`, authToken)
+  public deleteComment(commentId) : Observable<any> {
+    let data = {}
+    return this.http.post(`${this.url}/issue/deletecomment/${commentId}`, data)
   }
 
-  public getAllComments(issueId, authToken) : Observable<any> {
-    return this.http.get(`${this.url}/issue/comments/${issueId}?authToken=${authToken}`)
+  public getAllComments(issueId) : Observable<any> {
+    return this.http.get(`${this.url}/issue/comments/${issueId}`)
   }
 
   public getAllFiles() : Observable<any> {

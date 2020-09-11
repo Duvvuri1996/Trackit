@@ -31,15 +31,14 @@ export class UserDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllIssues();
-    this.getSingleUser();
     //this.getSingleUserIssue();
     this.getAllUsers();
     this.socialUsers();
     //this.searchIssue();
     this.numOfDays();
     this.authToken = Cookie.get('authToken');
-    this.userName = Cookie.get('userName');
-    this.userId = Cookie.get('userId');
+    this.userName = Cookie.get('receiverName');
+    this.userId = Cookie.get('receiverId');
     this.firstChar = this.userName.slice(0,1);
   }
   public getAllUsers: any = () => {
@@ -90,27 +89,6 @@ export class UserDashboardComponent implements OnInit {
         }
       } else {
         this.toastr.warningToastr('No issues to view')
-      }
-    })
-  }
-
-  public getSingleUser: any = (userId) => {
-    let data = {
-      userId : userId
-    }
-    this.appService.singleUser(data).subscribe((apiResponse) => {
-      if(apiResponse.status === 200) {
-        let userId = apiResponse.data.userId
-        this.appService.issueByUserId(userId).subscribe((apiResponse) => {
-          if(apiResponse.status === 200) {
-            this.singleIssue = apiResponse.data
-          } else {
-            this.toastr.warningToastr('No issues found for the given user')
-          }
-        },
-        (err) => {
-          this.toastr.errorToastr('Failed to retireve data')
-        })
       }
     })
   }

@@ -13,6 +13,10 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "ng2-cookies",
+              "rxjs"
+            ],
             "outputPath": "dist/trackItFrontEnd",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -24,8 +28,14 @@
               "src/assets"
             ],
             "styles": [
-              "/home/sowmya/trackIt/trackItFrontEnd/src/styles.css",
-              "/home/sowmya/trackIt/trackItFrontEnd/node_modules/bootstrap/dist/css/bootstrap.min.css"
+              {
+                "input" :"/home/sowmya/trackIt/trackItFrontEnd/node_modules/bootstrap/dist/css/bootstrap.min.css" 
+              },
+              {
+                "input" : "/home/sowmya/trackIt/trackItFrontEnd/node_modules/font-awesome/css/font-awesome.css"
+              },
+              "src/styles.css"
+              
             ],
             "scripts": [
               "/home/sowmya/trackIt/trackItFrontEnd/node_modules/jquery/dist/jquery.min.js",

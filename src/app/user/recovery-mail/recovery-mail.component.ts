@@ -16,6 +16,15 @@ export class RecoveryMailComponent implements OnInit {
 
   ngOnInit(): void {
   }
+  
+  public goToSignIn() {
+    this.router.navigate(['/signin'])
+  }
+
+  public goToSignUp() {
+    this.router.navigate(['/signup'])
+  }
+
   public recoveryMail : any = () => {
     if(!this.userEmail) {
       this.toastr.warningToastr('userEmail is required')
@@ -28,7 +37,7 @@ export class RecoveryMailComponent implements OnInit {
           this.toastr.successToastr('Recovery token sent to your email Id')
           this.router.navigate(['/signin'])
         } else {
-          this.toastr.errorToastr(apiResponse.message)
+          this.toastr.warningToastr(apiResponse.message)
         }
       },
       (err) => {

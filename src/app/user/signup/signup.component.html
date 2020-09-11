@@ -1,1 +1,81 @@
-<p>signup works!</p>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+
+    <a class="navbar-brand" href="/">Issue Tracking Tool</a>
+  
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+  
+      <span class="navbar-toggler-icon"></span>
+  
+    </button>
+  
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+  
+      <ul class="navbar-nav mr-auto">
+  
+        <li class="nav-item">
+  
+          <a class="nav-link" (click)="goToSignin()">Sign-In</a>
+  
+        </li>
+
+        <li class="nav-item">
+  
+          <a class="nav-link" (click)="goToResetPassword()">Reset-Password</a>
+  
+        </li>
+  
+      </ul>
+  
+    </div>
+  
+  </nav>
+  <div class="row p-0 m-0">
+    <div class="col-sm"></div>
+    <div class="col-sm p-5">
+      <h2 class="form-signin-heading">Sign Up</h2>
+      <span>FirstName: </span>
+  
+      <label for="inputFirstName" class="sr-only">FirstName</label>
+  
+      <input type="text" id="inputFirstName" class="form-control" [(ngModel)]="firstName" placeholder="FirstName" autofocus>
+  
+      <span>LastName: </span>
+  
+      <label for="inputLastName" class="sr-only">LastName</label>
+  
+      <input type="text" id="inputLastName" class="form-control" [(ngModel)]="lastName" placeholder="LastName">
+
+      <span>Country: </span>
+      <label for="inputCountry" class="sr-only">Country</label>
+  
+      <select id="inputCountry" class="form-control" [(ngModel)]="country" class ="form-control" placeholder="Country">
+        <option value="">Please select</option>
+        <option *ngFor = "let country of countries" [value] = "country.name" >{{ country.name }}</option> 
+      </select>
+      <span>MobileNumber: </span>
+  
+        <label for="inputMobile" class="sr-only">Mobile Number</label>
+  
+        <input type="tel" id="inputMobile" class="form-control" [(ngModel)]="mobileNumber" placeholder="Enter Your Mobile Number">
+  
+        <span>Email: </span>
+  
+        <label for="inputEmail" class="sr-only">Email address</label>
+  
+        <input type="email" id="inputEmail" class="form-control" [(ngModel)]="userEmail" placeholder="Email address">
+  
+        <span>Password: </span>
+  
+        <label for="inputPassword" class="sr-only">Password</label>
+  
+        <input type="password" id="inputPassword" class="form-control" [(ngModel)]="userPassword" placeholder="Password">
+        <br>
+        <button class="btn btn-lg btn-primary btn-block" style="color: black;" type="button" (click)="signup()">Sign-Up</button>
+  
+      </div>
+  
+      <div class="col-sm"></div>
+  
+    </div>
+  

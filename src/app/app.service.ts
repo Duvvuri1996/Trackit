@@ -14,7 +14,7 @@ import { HttpParams, HttpErrorResponse } from '@angular/common/http';
 })
 export class AppService {
 
- private url = 'http://localhost:3000/api/v1'
+ public url = '/api/v1'
 
 
   constructor( public http : HttpClient ) { }

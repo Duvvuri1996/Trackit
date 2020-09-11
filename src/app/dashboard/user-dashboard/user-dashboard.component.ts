@@ -35,7 +35,7 @@ export class UserDashboardComponent implements OnInit {
     this.getAllUsers();
     this.socialUsers();
     //this.searchIssue();
-    this.numOfDays();
+    //this.numOfDays();
     this.authToken = Cookie.get('authToken');
     this.userName = Cookie.get('receiverName');
     this.userId = Cookie.get('receiverId');

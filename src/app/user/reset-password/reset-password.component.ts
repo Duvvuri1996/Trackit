@@ -19,6 +19,14 @@ export class ResetPasswordComponent implements OnInit {
   ngOnInit(): void {
     this.recoveryToken = this.route.snapshot.paramMap.get('recoveryToken')
   }
+
+  public goToSignIn() {
+    this.router.navigate(['/signin'])
+  }
+
+  public goToSignUp() {
+    this.router.navigate(['/signup'])
+  }
   
   public resetPassword : any =() => {
     if(!this.userPassword) {

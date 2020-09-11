@@ -18,6 +18,13 @@ export class SigninComponent implements OnInit {
 
   ngOnInit(): void {
   }
+  public goToSignUp() {
+    this.router.navigate(['/signup'])
+  }
+
+  public goToResetPassword() {
+    this.router.navigate(['/recoverymail'])
+  }
 
   public signin : any = () => {
 

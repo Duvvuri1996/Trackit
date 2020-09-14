@@ -1,7 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { ToastrModule } from 'ng6-toastr-notifications';
-import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
@@ -14,7 +13,11 @@ import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PageNotFoundComponent } from '../app/page-not-found/page-not-found.component';
 import { ServerErrorComponent } from './server-error/server-error.component';
-import { AngularFontAwesomeModule } from 'angular-font-awesome';
+//import { AngularFontAwesomeModule } from 'angular-font-awesome/dist/angular-font-awesome';
+import { AuthGuardService } from './auth-guard.service';
+import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from '@angular/material/form-field';
+import {MatNativeDateModule} from '@angular/material/core';
+import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 
 @NgModule({
   declarations: [
@@ -24,13 +27,12 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
     CommonModule,
+    MatNativeDateModule,
     DashboardModule,
     ToastrModule.forRoot(),
     UserModule,
     BrowserAnimationsModule,
-    AngularFontAwesomeModule,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
@@ -42,8 +44,13 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome';
       { path : 'servererror', component : ServerErrorComponent }
     ])
   ],
-  providers: [AppService],
+  providers: [AppService, AuthGuardService,
+  {
+    provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' }
+  }],
   bootstrap: [AppComponent],
   exports : [RouterModule]
 })
 export class AppModule { }
+platformBrowserDynamic().bootstrapModule(AppModule)
+  .catch(err => console.error(err));

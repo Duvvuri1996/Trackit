@@ -41,7 +41,7 @@ export class SigninComponent implements OnInit {
         if(apiResponse.status === 200) {
           Cookie.set('authToken', apiResponse.data.authToken)
           Cookie.set('receiverId', apiResponse.data.userDetails.userId)
-          Cookie.set('receiverName', apiResponse.data.userDetails.userName)
+          Cookie.set('receiverName', apiResponse.data.userDetails.fullName)
           this.appService.setUserInfoInLocalStorage(apiResponse.data.userDetails)
           this.toastr.successToastr('Login successfull')
           setTimeout(() => {
@@ -54,16 +54,17 @@ export class SigninComponent implements OnInit {
       (err) => {
         this.toastr.errorToastr('Failed to login')
       })
-    }
-    
+    } 
   }
 
   public socialLogin : any = () => {
-    window.open('/auth/google/', "mywindow", "location=1, status=1, scrollbars=1, width=800, height=800")
+    console.log('function working')
+    window.open('http://localhost:3000/auth/google', "mywindow", "location=1, status=1, scrollbars=1, width=800, height=800")
     let listener = window.addEventListener('message', (message) => {
+      console.log(message)
       this.appService.setUserInfoInLocalStorage(message.data.user)
-      Cookie.set('userName', message.data.user.firstName +' '+ message.data.user.lastName)
-      Cookie.set('userId', message.data.user.userId)
+      Cookie.set('receiverName', message.data.user.firstName +' '+ message.data.user.lastName)
+      Cookie.set('receiverId', message.data.user.userId)
       this.router.navigate(['/userdashboard'])
     })
   }

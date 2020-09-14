@@ -1,1 +1,38 @@
-<p>user-dashboard works!</p>
+<body class="background" style="padding-bottom: 20px">
+<nav class = "navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="profile">
+  <h3 style="color:chocolate; text-transform:uppercase">{{userName}}</h3>
+  <button style="width: 250px;" class="btn btn-outline-light" (click)="logout()">Sign-Out</button>
+</div>  
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+  
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          
+        </li>
+      </ul>
+      <form class="form-inline my-2 my-lg-0">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" [(ngModel)]="searchData"
+          name="searchData">
+        <button class="btn btn-outline-light my-2 my-sm-0" type="submit" (click)="searchIssue()">Search</button>
+      </form>
+    </div>
+  </nav>
+
+  <div style="padding: 1em; display: flex; justify-content: space-around">
+    <div class="btn-group">
+      <button class="btn btn-outline-dark btn-lg dropdown-toggle" type="button" (click)="notifyCount()" data-toggle="dropdown"
+        aria-haspopup="true" aria-expanded="false">
+        Notifications <span class="badge badge-dark" *ngIf="!notify">{{count.length}}</span>
+      </button>
+      <div class="dropdown-menu">
+        <a class="dropdown-item" *ngFor="let x of notifyData.slice().reverse()" (click)="goToViewDashboard(x.issueId)">{{x.descriptions}}</a>
+      </div>
+    </div>
+    <button class="btn btn-outline-dark btn-lg" type="submit" (click)="goToCreateDashboard()">Create Issue</button>
+  </div>
+</body>

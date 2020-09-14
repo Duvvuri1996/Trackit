@@ -82,7 +82,7 @@ export class SignupComponent implements OnInit {
         if(apiResponse.status === 200) {
           Cookie.set('authToken', apiResponse.data.authToken)
           Cookie.set('receiverId', apiResponse.data.userDetails.userId)
-          Cookie.set('receiverName', apiResponse.data.userDetails.userName)
+          Cookie.set('receiverName', apiResponse.data.userDetails.fullName)
           this.appService.setUserInfoInLocalStorage(apiResponse.data.userDetails)
 
           this.toastr.successToastr('Signup successfull')

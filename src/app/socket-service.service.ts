@@ -1,5 +1,5 @@
-/**import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { Observable, Observer } from 'rxjs';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/toPromise';
@@ -20,13 +20,18 @@ export class SocketServiceService {
   }
   
   public verifyUserOnConnection = () => {
-    return Observable.create((observer) => {
+    return new Observable((observer) => {
       this.socket.on('verify-user', (data) => {
         observer.next(data)
       })
     })
   }
 
+  public setUser = () => {
+    return new Observable((observer) => {
+      this.socket.emit('set-user', )
+    })
+  }
 
 
-}*/
+}

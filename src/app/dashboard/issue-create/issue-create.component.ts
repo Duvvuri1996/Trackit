@@ -38,8 +38,8 @@ export class IssueCreateComponent implements OnInit {
   
 
   ngOnInit(): void {
-    this.userName = Cookie.get('userName');
-    this.userId = Cookie.get('userId');
+    this.userName = Cookie.get('receiverName');
+    this.userId = Cookie.get('receiverId');
     this.getAllUsers();
   }
 

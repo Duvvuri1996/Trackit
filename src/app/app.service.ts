@@ -24,7 +24,7 @@ export class AppService {
   }
 
   public getUserInfoInLocalStorage = () => {
-    return JSON.parse(localStorage.getItem('userInfo'))
+    return (JSON.parse(localStorage.getItem('userInfo')))
   }
 
   public signUp(data) : Observable<any>  {
@@ -113,6 +113,10 @@ export class AppService {
     return this.http.get(`${this.url}/issue/allIssues`)
   }
 
+  public getAllIssuesCount() : Observable<any> {
+    return this.http.get(`${this.url}/issue/getallissuescount`)
+  }
+
   public singleIssue(issueId) : Observable<any> {
     return this.http.get(`${this.url}/issue/${issueId}`)
   }
@@ -128,7 +132,7 @@ export class AppService {
   public postWatch(data) : Observable<any> {
     const params = new HttpParams()
     .set('issueId', data.issueId)
-    .set('watchId', Cookie.get('userId'))
+    .set('watchId', Cookie.get('receiverId'))
     return this.http.post(`${this.url}/issue/watch`, params)
   }
 
@@ -183,5 +187,15 @@ export class AppService {
 
   public downloadFile(fileName) : Observable<any> {
     return this.http.get(`${this.url}/downloadFile/${fileName}`)
+  }
+
+  public getAllNotifications() : Observable<any> {
+    return this.http.get(`${this.url}/issue/notification/${Cookie.get('receiverId')}`)
+  }
+
+  public notificationCount(userId) : Observable<any> {
+    const params = new HttpParams()
+    .set('userId', userId)
+    return this.http.post(`${this.url}/issue/notifycount`, params)
   }
 }

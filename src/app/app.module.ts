@@ -18,6 +18,9 @@ import { AuthGuardService } from './auth-guard.service';
 import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from '@angular/material/form-field';
 import {MatNativeDateModule} from '@angular/material/core';
 import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
+import { DemoMaterialModule } from './material-module';
+import { NgxEditorModule } from 'ngx-editor';
+import { FileUploadModule } from 'ng2-file-upload';
 
 @NgModule({
   declarations: [
@@ -28,6 +31,7 @@ import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
   imports: [
     BrowserModule,
     CommonModule,
+    DemoMaterialModule,
     MatNativeDateModule,
     DashboardModule,
     ToastrModule.forRoot(),
@@ -35,7 +39,9 @@ import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
     BrowserAnimationsModule,
     HttpClientModule,
     FormsModule,
+    FileUploadModule,
     ReactiveFormsModule,
+    NgxEditorModule,
     RouterModule.forRoot([
       { path : 'signin', component : SigninComponent, pathMatch : 'full' },
       { path : '', redirectTo : '/signin', pathMatch : 'full' },
@@ -52,5 +58,3 @@ import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
   exports : [RouterModule]
 })
 export class AppModule { }
-platformBrowserDynamic().bootstrapModule(AppModule)
-  .catch(err => console.error(err));

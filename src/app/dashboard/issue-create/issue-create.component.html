@@ -1,1 +1,62 @@
-<p>issue-create works!</p>
+<div class= "container-fluid">
+    <div class="row p-5" style="text-align: left;">
+    <div class="col-md-12">
+        
+            <div class="form-group">
+                <label style="font-size: 25px;" for="issueTitle">Title</label>
+                <input type="text" class="form-control" id="issueTitle" [(ngModel)]="issueTitle" name="issueTitle"  #title="ngModel" placeholder="Enter Title" required>
+            </div>
+            <div [hidden] = "title.valid || title.pristine" class="alert alert-danger">
+                    Title is required
+            </div>
+            <div class="form-group">
+                <label style="font-size: 25px;" for="issueDescription">Description</label>
+                <ngx-editor id="issueDescription" placeholder="Enter text here..." [spellcheck]="true" name="issueDescription" [(ngModel)]="issueDescription"
+                  name="description" #description ="ngModel" required></ngx-editor>
+            </div>
+            <div [hidden]="description.valid || description.pristine" class="alert alert-danger">
+                Description is Must
+            </div>
+            <div class="form-group">
+                <label style="font-size: 25px;">Status</label>
+                <select [(ngModel)]="status" #category="ngModel" name="issueStatus" class="form-control" id="Status"
+                  required>
+                  <option *ngFor="let status of allStatus" [value]="status">{{status}}</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="assignee" style="font-size: 25px;">Assign To</label>
+                <select [(ngModel)]="assigneeName" #assigne="ngModel" name="assigneeName" class="form-control" id="assignee"
+                  required>
+                  <option *ngFor="let x of allUsers" [value]="x.fullName">{{x.fullName}}</option>
+                </select>
+            </div>
+            <div [hidden]="assigne.valid || assigne.pristine" class="alert alert-danger">
+                Please assign it
+            </div>
+            <div class="form-group" action="/api/upload" method="POST" enctype="multipart/form-data" style="margin-bottom: 20px; height: auto;">
+                <label style="font-size: 25px; font-style: bold">Attachments</label>
+                <div class="custom-file mb-3">
+                  <input type="file" name="file" id="file" class="custom-file-input" multiple ng2FileSelect [uploader]="uploader">
+                  <label for="file" class="custom-file-label">Choose Your File</label>
+                  <div class="uploadList" *ngFor="let item of uploader.queue">
+                    <div class="col" style="padding: 5px">{{item.file.name}}</div>
+                    <div class="col-sm-4" style="padding: 5px">
+                      <div class="progress">
+                        <div class="progress-bar bg-success" [ngStyle]="{'width': item.progress+'%'}"></div>
+                      </div>
+                    </div>
+                    <div>
+                      <button style="margin:20px" type="button" class="btn btn-dark" (click)="item.upload()">Upload</button>
+                      <button  type="button" class="btn btn-danger" (click)="item.remove()">Cancel</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div style="display: flex; justify-content: space-between">
+                <button type="submit" class="btn btn-danger btn-lg" [routerLink]="['/userdashboard']"> Cancel</button>
+                <button type="submit"  class="btn btn-success btn-lg" (click)="createIssue()">Post Issue</button>
+              </div>
+        
+    </div>
+</div>

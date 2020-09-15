@@ -11,28 +11,133 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
   
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-          
-        </li>
+        <li class="nav-item active"></li>
       </ul>
       <form class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" [(ngModel)]="searchData"
-          name="searchData">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" [(ngModel)]="search"
+          name="search">
         <button class="btn btn-outline-light my-2 my-sm-0" type="submit" (click)="searchIssue()">Search</button>
+        <button class="btn btn-outline-light my-2 my-sm-0" type="button" (click)="getWatchList()">Your Watch List</button>
       </form>
     </div>
   </nav>
 
   <div style="padding: 1em; display: flex; justify-content: space-around">
     <div class="btn-group">
-      <button class="btn btn-outline-dark btn-lg dropdown-toggle" type="button" (click)="notifyCount()" data-toggle="dropdown"
+      <button class="btn btn-outline-dark btn-lg dropdown-toggle" type="button" id = "dropdownMenuButton" (click)="notifyCount()" data-toggle="dropdown"
         aria-haspopup="true" aria-expanded="false">
         Notifications <span class="badge badge-dark" *ngIf="!notify">{{count.length}}</span>
       </button>
-      <div class="dropdown-menu">
-        <a class="dropdown-item" *ngFor="let x of notifyData.slice().reverse()" (click)="goToViewDashboard(x.issueId)">{{x.descriptions}}</a>
+      <div aria-labelledby="dropdownMenuButton" class="dropdown-menu">
+        <a *ngFor="let x of notifyData.slice().reverse()" style="color: black;" (click)="goToViewDashboard(x.issueId)">{{x.description}}</a>
       </div>
     </div>
     <button class="btn btn-outline-dark btn-lg" type="submit" (click)="goToCreateDashboard()">Create Issue</button>
   </div>
+ 
+
+  <div class = "container" style = "border: 2px solid black; padding : 1em; border-radius : 20px; margin-bottom : 20px" *ngIf="!toggler">
+  <h2 style="text-align: center;height: 50px; padding: 0.3em; color: black;">Search result</h2>
+  <div class="container-fluid scrolling-wrapper-flexbox" id="scrollBackLog" >
+    <table  matSort (matSortChange)="sortData($event)"  class ="table table-bordered table-md" style = "height: 100px; overflow: auto; width :100%">
+    <thead>
+      <tr>
+        <th mat-sort-header="issueTitle"class = "th-md">Title</th>
+        <th mat-sort-header="userName"class = "th-md">Reporter</th>
+        <th mat-sort-header="status"class = "th-md">Status</th>
+        <th mat-sort-header="createdOn"class = "th-md">Created on </th>
+        <th class = "th-sm">View Issue</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let x of searchData.slice().reverse()">
+        <td>{{x.issueTitle}}</td>
+        <td>{{x.userName}}</td>
+        <td>{{x.status}}</td>
+        <td>{{x.createdOn | date}}</td>
+        <td><a [routerLink]="['/view/',x.issueId]">View Issue</a></td>
+      </tr>
+    </tbody>
+    <mat-paginator [length]="length"
+              [pageSize]="5">
+</mat-paginator>
+    </table>
+  </div>
+  <div style="display: flex; justify-content: space-between">
+    <button class="btn btn-outline-dark my-2 my-sm-0" type="submit" (click)="scrollPreviousBacklog()">Previous</button>
+    <button class="btn btn-outline-dark my-2 my-sm-0" type="submit" (click)="back()">Go Back</button>
+    <button id="buttonBacklog" class="btn btn-outline-dark my-2 my-sm-0" type="submit" (click)="scrollNextBacklog()">Next</button>
+  </div>
+</div>
+<div  *ngIf="toggler && !watchToggle">
+<div class = "container" style = "border: 2px solid black; padding : 1em; border-radius : 20px; margin-bottom : 20px">
+  <h2 style="text-align: center;height: 50px; padding: 0.3em; color: black;">Issues Assigned to You</h2>
+  <div class="container-fluid scrolling-wrapper-flexbox" id="scrollBackLog" >
+    <table  matSort (matSortChange)="sortDataIssues($event)"  class ="table table-bordered table-md" style = "height: 100px; overflow: auto; width :100%">
+    <thead>
+      <tr>
+        <th mat-sort-header="issueTitle"class = "th-md">Title</th>
+        <th mat-sort-header="userName"class = "th-md">Reporter</th>
+        <th mat-sort-header="status"class = "th-md">Status</th>
+        <th mat-sort-header="createdOn"class = "th-md">Created on </th>
+        <th class = "th-sm">View Issue</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let x of allIssues">
+        <td>{{x.issueTitle}}</td>
+        <td>{{x.userName}}</td>
+        <td>{{x.status}}</td>
+        <td>{{x.createdOn | date}}</td>
+        <td><a [routerLink]="['/view/',x.issueId]">View Issue</a></td>
+      </tr>
+    </tbody>
+    <mat-paginator [length]="length"
+              [pageSize]="5">
+</mat-paginator>
+    </table>
+  </div>
+  <div style="display: flex; justify-content: space-between">
+    <button class="btn btn-outline-dark my-2 my-sm-0" type="submit" (click)="scrollPreviousBacklog()">Previous</button>
+    <button class="btn btn-outline-dark my-2 my-sm-0" type="submit" (click)="back()">Go Back</button>
+    <button id="buttonBacklog" class="btn btn-outline-dark my-2 my-sm-0" type="submit" (click)="scrollNextBacklog()">Next</button>
+  </div>
+</div>
+</div>
+<div *ngIf = "watchToggle">
+  <div class = "container" style = "border: 2px solid black; padding : 1em; border-radius : 20px; margin-bottom : 20px">
+    <h2 style="text-align: center;height: 50px; padding: 0.3em; color: black;">Watch Issues</h2>
+    <div class="container-fluid scrolling-wrapper-flexbox" id="scrollBackLog" >
+      <table  matSort (matSortChange)="sortDataWatch($event)"  class ="table table-bordered table-md" style = "height: 100px; overflow: auto; width :100%">
+      <thead>
+        <tr>
+          <th mat-sort-header="issueTitle"class = "th-md">Title</th>
+          <th mat-sort-header="userName"class = "th-md">Reporter</th>
+          <th mat-sort-header="status"class = "th-md">Status</th>
+          <th mat-sort-header="createdOn"class = "th-md">Created on </th>
+          <th class = "th-sm">View Issue</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let x of watchDetails">
+          <td>{{x.issueTitle}}</td>
+          <td>{{x.userName}}</td>
+          <td>{{x.status}}</td>
+          <td>{{x.createdOn | date}}</td>
+          <td><a [routerLink]="['/view/',x.issueId]">View Issue</a></td>
+        </tr>
+      </tbody>
+      <mat-paginator [length]="length"
+                [pageSize]="5">
+  </mat-paginator>
+      </table>
+    </div>
+    <div style="display: flex; justify-content: space-between">
+      <button class="btn btn-outline-dark my-2 my-sm-0" type="submit" (click)="scrollPreviousBacklog()">Previous</button>
+      <button class="btn btn-outline-dark my-2 my-sm-0" type="submit" (click)="back()">Go Back</button>
+      <button id="buttonBacklog" class="btn btn-outline-dark my-2 my-sm-0" type="submit" (click)="scrollNextBacklog()">Next</button>
+    </div>
+  </div>
+  
+</div>
 </body>

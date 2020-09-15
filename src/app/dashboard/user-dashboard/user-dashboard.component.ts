@@ -20,19 +20,11 @@ import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 
 export class UserDashboardComponent implements OnInit{
 
-  /**displayedColumns: string[] = ['Title', 'userName', 'Status', 'Date', 'Number'];
-  issueDetails : Issues | null;
-  pageSize : number;
-  length : any;
-  dataSource : IssueDetails[] = [];
-  resultsLength = 0;
-  isLoadingResults = true;
-  isRateLimitReached = false;
-
   @ViewChild(MatPaginator) matPaginator: MatPaginator;
-  @ViewChild(MatSort) matSort: MatSort;**/
+  @ViewChild(MatSort) matSort: MatSort;
 
-  public allIssues : any[] = [];
+  
+  public allIssues: any[]  = [];
   public singleIssue : any;
   public userId : any;
   public userName : any;
@@ -49,28 +41,94 @@ export class UserDashboardComponent implements OnInit{
   public authToken : any;
   public notifications = [];
   public count = [];
-  public notifyData: any[] = [];
-  notify: boolean = false;
+  public notifyData = [];
+  public notify: boolean = false;
   public search : String;
   public countIssue : number;
+  public toggler : boolean = true;
+  public length : number;
+  public allData;
+  public watchToggle : boolean = false;
 
   constructor(public router : Router, public appService : AppService, public toastr : ToastrManager, public http: HttpClient) { }
 
-  
-
   ngOnInit(): void {
-    
-    this.getAllIssues();
-    //this.getSingleUserIssue();
-    this.getAllUsers();
-    this.socialUsers();
-    //this.searchIssue();
-    //this.numOfDays();
-    this.getNotification();
+  
     this.authToken = Cookie.get('authToken');
     this.userName = Cookie.get('receiverName');
     this.userId = Cookie.get('receiverId');
-    this.firstChar = this.userName[0];                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+    this.firstChar = this.userName[0];
+    //this.getSingleUserIssue();
+    this.getAllUsers();
+    this.socialUsers();
+    this.notifyCount();
+    //this.searchIssue();
+    //this.numOfDays();
+    this.getNotification();
+    this.getAllIssues();                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+  }
+  public compare(a: number | string, b: number | string, isAsc: boolean) {
+    return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+  }
+  public compareDate(a: number | string, b: number | string, isAsc: boolean){
+    let c = new Date(a)
+    let d = new Date(b)
+    
+    return (c < d ? -1 : 1) * (isAsc ? 1 : -1);
+  }
+
+  sortData(sort : MatSort){
+    const data = this.searchData.slice()
+    if (!sort.active || sort.direction === '') {
+      this.searchData = data;
+      return;
+    }
+    this.searchData = data.sort((a, b) => {
+      const isAsc = sort.direction === 'asc';
+      switch (sort.active) {
+        case 'issueTitle': return this.compare(a.issueTitle, b.issueTitle, isAsc);
+        case 'userName': return this.compare(a.userName, b.userName, isAsc);
+        case 'createdOn': return this.compareDate(a.createdOn, b.createdOn, isAsc);
+        case 'status': return this.compare(a.status, b.status, isAsc);
+        default: return 0;
+      }
+    });
+  }
+
+  sortDataIssues(sort : MatSort){
+    const data = this.allIssues.slice()
+    if (!sort.active || sort.direction === '') {
+      this.allIssues = data;
+      return;
+    }
+    this.allIssues = data.sort((a, b) => {
+      const isAsc = sort.direction === 'asc';
+      switch (sort.active) {
+        case 'issueTitle': return this.compare(a.issueTitle, b.issueTitle, isAsc);
+        case 'userName': return this.compare(a.userName, b.userName, isAsc);
+        case 'createdOn': return this.compareDate(a.createdOn, b.createdOn, isAsc);
+        case 'status': return this.compare(a.status, b.status, isAsc);
+        default: return 0;
+      }
+    });
+  }
+  
+  sortDataWatch(sort : MatSort){
+    const data = this.watchDetails.slice()
+    if (!sort.active || sort.direction === '') {
+      this.watchDetails = data;
+      return;
+    }
+    this.watchDetails = data.sort((a, b) => {
+      const isAsc = sort.direction === 'asc';
+      switch (sort.active) {
+        case 'issueTitle': return this.compare(a.issueTitle, b.issueTitle, isAsc);
+        case 'userName': return this.compare(a.userName, b.userName, isAsc);
+        case 'createdOn': return this.compareDate(a.createdOn, b.createdOn, isAsc);
+        case 'status': return this.compare(a.status, b.status, isAsc);
+        default: return 0;
+      }
+    });
   }
 
   public getIssuesCount = () => {
@@ -86,37 +144,7 @@ export class UserDashboardComponent implements OnInit{
  public goToViewDashboard (issueId) {
    this.router.navigate(['/view/', issueId])
  }
-  /**ngAfterViewInit() {
-    
-    this.issueDetails = new Issues(this.http);
-    this.matSort.sortChange.subscribe(() => this.matPaginator.pageIndex = 0)
-    merge(this.matSort.sortChange, this.matPaginator.page)
-      .pipe(
-        startWith({}),
-        switchMap(() => {
-          this.isLoadingResults = true;
-          return this.issueDetails.getIssues(
-            this.matSort.active, this.matSort.direction, this.matPaginator.pageIndex);
-        }),
-        map(dataSource => {
-          // Flip flag to show that loading has finished.
-          this.isLoadingResults = false;
-          this.isRateLimitReached = false;
-          this.length = dataSource.items.length
-
-          console.log(this.length.data +" is this")
-          return dataSource.items;
-        }),
-        catchError(() => {
-          this.isLoadingResults = false;
-          // Catch if the GitHub API has reached its rate limit. Return empty data.
-          this.isRateLimitReached = true;
-          return observableOf([]);
-        })
-      ).subscribe(dataSource => this.dataSource = dataSource);
-  }**/
   
-
   public getAllUsers: any = () => {
     this.appService.allUsers().subscribe((apiResponse) => {
       if(apiResponse.status === 200) {
@@ -126,8 +154,6 @@ export class UserDashboardComponent implements OnInit{
            name = allUsersData.fullName;
         }
         this.fullName.push(name)
-        console.log(this.userName)
-      console.log(this.firstChar)
       }
     })
   }
@@ -148,28 +174,33 @@ export class UserDashboardComponent implements OnInit{
   public getAllIssues: any =() => {
     this.appService.getAllIssues().subscribe((apiResponse) => {
       if(apiResponse.status === 200) {
-        this.allIssues = apiResponse.data;
-        console.log(this.allIssues)
-        for (let data of this.allIssues) {
-          switch (data.status) {
+        let allData = []
+        allData = apiResponse.data
+        //console.log(allData)
+        for(var x of allData){
+          if(x.assigneeId === this.userId){
+            this.allIssues.push(x)
+          }
+          switch (x.status) {
             case 'Backlog' : 
-            this.backLogs.push(data);
+            this.backLogs.push(x);
             break;
             case 'In-progress' : 
-            this.inProgress.push(data);
+            this.inProgress.push(x);
             break;
             case 'In-Test' :
-            this.inTest.push(data);
+            this.inTest.push(x);
             break;
             case 'Done' :
-            this.done.push(data);
+            this.done.push(x);
             break;
-          }
+           }
+         }
         }
-      } else {
+      },(error) => {
         this.toastr.warningToastr('No issues to view')
-      }
     })
+    
   }
 
   public numOfDays: any = (issueId) => {
@@ -186,7 +217,11 @@ export class UserDashboardComponent implements OnInit{
     }
     this.appService.searchIssue(data).subscribe((apiResponse) => {
       if(apiResponse.status === 200) {
+        this.search = ''
         this.searchData = apiResponse.data
+        this.length = this.searchData.length
+        console.log(this.searchData)
+        return this.toggler = false
       } else {
         this.toastr.infoToastr('No result found')
       }
@@ -222,12 +257,27 @@ export class UserDashboardComponent implements OnInit{
   }
 
   public getWatchList = () => {
+    this.watchToggle = true;
+
     this.appService.watchOfUser(this.userId).subscribe((apiResponse) => {
       if(apiResponse.status === 200) {
-        let details = apiResponse.userWatchDetails;
-        for(let x of details) {
-          this.watchDetails.push(x.issueTitle)
+        console.log(apiResponse)
+        let details = apiResponse.data;
+        if(details.watchId === Cookie.get('receiverId')){
+          for(let x of details) {
+            if(this.allIssues !== null){
+              for(let y of this.allIssues){
+                if(x.issueId === y.issueId){
+                  this.watchDetails.push(y)
+                }
+              }
+              
+            }
+            
+          }
         }
+        
+        console.log(this.watchDetails)
       }
       else {
         this.toastr.warningToastr('No watch list')
@@ -246,11 +296,55 @@ export class UserDashboardComponent implements OnInit{
   }
 
 
+  public scrollNextBacklog = () => {
+    document.getElementById('scrollBacklog').scrollBy(10, 0)
+  }
+
+  public scrollPreviousBacklog = () => {
+    document.getElementById('scrollBacklog').scrollBy(-10, 0)
+  }
+
+  public scrollNextProgress = () => {
+    document.getElementById('scrollProgress').scrollBy(100, 0)
+  }
+
+  public scrollPreviousProgress = () => {
+    document.getElementById('scrollProgress').scrollBy(-100, 0)
+  }
+
+  public scrollNextTest = () => {
+    document.getElementById('scrollTest').scrollBy(100, 0)
+  }
+
+  public scrollPreviousTest = () => {
+    document.getElementById('scrollTest').scrollBy(-100, 0)
+  }
+
+  public scrollNextDone = () => {
+    document.getElementById('scrollDone').scrollBy(100, 0)
+  }
+
+  public scrollPreviousDone = () => {
+    document.getElementById('scrollDone').scrollBy(-100, 0)
+  }
+
+  public scrollNextWatch = () => {
+    document.getElementById('scrollWatch').scrollBy(100, 0)
+  }
+
+  public scrollPreviousWatch = () => {
+    document.getElementById('scrollWatch').scrollBy(-100, 0)
+  }
+
+  public back = () => {
+    return this.toggler = true
+  }
+
   public getNotification = () => {
     this.appService.getAllNotifications().subscribe((apiResponse) => {
       var data = apiResponse.data
       this.notifications.push(data)
-      console.log(this.notifications)
+      //console.log(this.notifications)
       for(var x of this.notifications){
         if(x !== null) {
           for(let y of x) {
@@ -258,10 +352,10 @@ export class UserDashboardComponent implements OnInit{
               this.count.push(y.notificationCount)
               for(let z of y.notificationDescription) {
                 let id = y.issueId
-
+                let des = z
                 let data = {
                   issueId : id,
-                  descriptions : z
+                  description : des
                 }
                 this.notifyData.push(data)
                 console.log(this.notifyData)
@@ -277,18 +371,3 @@ export class UserDashboardComponent implements OnInit{
     })
   }
 }
-
-/**export interface issueApi {
-  items : IssueDetails[],
-}
-
-export class Issues {
-  constructor (private http : HttpClient) {}
-  
-  getIssues(sort : string, order: string, page: number) : Observable<issueApi> {
-    const url = 'http://localhost:3000/api/v1/issue/allIssues'
-    const requestUrl = `${url}?q=repo:angular/components&sort=${sort}&order=${order}&page=${page + 1}`
-    return this.http.get<issueApi>(`${requestUrl}`);
-    console.log("Issues class is called");
-  }
-}**/

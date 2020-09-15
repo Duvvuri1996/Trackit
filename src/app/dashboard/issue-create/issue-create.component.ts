@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AppService } from '../../app.service';
 import { ToastrManager } from 'ng6-toastr-notifications';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FileUploader } from 'ng2-file-upload';
+import { FileUploader, FileSelectDirective } from 'ng2-file-upload';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
 
 @Component({
@@ -12,11 +12,11 @@ import { Cookie } from 'ng2-cookies/ng2-cookies';
 })
 export class IssueCreateComponent implements OnInit {
 
-  private uri = 'http://localhost:3000/api/v1/issue/uploads';
-  uploader : FileUploader = new FileUploader({url : this.uri})
+  private uri = '/api/v1/issue/uploads';
+  public uploader : FileUploader = new FileUploader({url : this.uri})
   public attachmentList : any = [];
 
-  constructor(public location : Location, public router : Router, public appService : AppService, public toastr : ToastrManager, public route : ActivatedRoute) { 
+  constructor(public router : Router, public appService : AppService, public toastr : ToastrManager, public route : ActivatedRoute) { 
       this.uploader.onCompleteItem = (item:any, response:any, status:any, headers:any)=> {
       this.attachmentList.push(JSON.parse(response))
       console.log(this.attachmentList)
@@ -62,14 +62,21 @@ export class IssueCreateComponent implements OnInit {
   }
 
   public createIssue = () => {
+
+    for (let y of this.allUsers) {
+      if (y.userId === this.assigneeId) {
+        var x = y.firstName + " " + y.lastName
+      }
+    }
+
     for(let y of this.attachmentList) {
       this.fileId.push(y.file.id)
     }
     if (!this.issueTitle) {
-      this.toastr.warningToastr('enter issueTitle')
+      this.toastr.warningToastr('Enter Title')
     }
     else if (!this.issueDescription) {
-      this.toastr.warningToastr('enter issueDescription')
+      this.toastr.warningToastr('enter Description')
     }
     else if (!this.assigneeName) {
       this.toastr.warningToastr('Select assigneeName')
@@ -83,19 +90,22 @@ export class IssueCreateComponent implements OnInit {
       let data = {
         issueTitle : this.issueTitle,
         issueDescription : this.issueDescription,
-        assigneeName : this.selectedUser.fullName,
-        assigneeId : this.selectedUser.userId, //this.selectedUser
+        assigneeName : this.assigneeName,
+        assigneeId : this.assigneeId, //this.selectedUser
         status : this.status,
         images : this.images,
         userName : this.userName,
         userId : this.userId
       }
+
       this.appService.createIssue(data).subscribe((apiResponse) => {
+        console.log('create issue')
         if(apiResponse.status === 200){
           this.toastr.successToastr('Issue created successfully')
           setTimeout(() => {
             this.router.navigate(['/userdashboard'])
-          })
+          }, 2000)
+          console.log('create issue')
         } else {
           this.toastr.warningToastr('Failed to create new issue')
         }

@@ -10,6 +10,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule  } from 'ng6-toastr-notifications';
 import { AuthGuardService } from '../auth-guard.service';
+import { DemoMaterialModule } from '../../app/material-module';
+import { NgxEditorModule } from 'ngx-editor';
+import { FileUploadModule } from 'ng2-file-upload';
 
 @NgModule({
   declarations: [IssueCreateComponent, UserDashboardComponent, IssueEditComponent, IssueViewComponent],
@@ -19,6 +22,9 @@ import { AuthGuardService } from '../auth-guard.service';
     ReactiveFormsModule,
     BrowserAnimationsModule,
     BrowserModule,
+    FileUploadModule,
+    NgxEditorModule,
+    DemoMaterialModule,
     ToastrModule.forRoot(),
     RouterModule.forChild ([
       { path : 'userdashboard', component : UserDashboardComponent, canActivate : [AuthGuardService] },

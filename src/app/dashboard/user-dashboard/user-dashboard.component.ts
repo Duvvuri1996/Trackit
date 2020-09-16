@@ -5,11 +5,13 @@ import { ToastrManager } from 'ng6-toastr-notifications';
 import { Router } from '@angular/router';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
 import { IssueDetails } from './issueDetails';
-import {  ViewChild, AfterViewInit } from '@angular/core';
+import { ViewChild, AfterViewInit } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import {merge, Observable, of as observableOf} from 'rxjs';
 import {catchError, map, startWith, switchMap} from 'rxjs/operators';
+import{ Location } from '@angular/common';
+import { TableFilterPipe } from '../../table-filter.pipe';
 
 @Component({
   selector: 'app-user-dashboard',
@@ -20,6 +22,7 @@ import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 
 export class UserDashboardComponent implements OnInit{
 
+  p: number = 1;
   @ViewChild(MatPaginator) matPaginator: MatPaginator;
   @ViewChild(MatSort) matSort: MatSort;
 
@@ -49,8 +52,9 @@ export class UserDashboardComponent implements OnInit{
   public length : number;
   public allData;
   public watchToggle : boolean = false;
+  public issueId : String;
 
-  constructor(public router : Router, public appService : AppService, public toastr : ToastrManager, public http: HttpClient) { }
+  constructor( public location : Location, public router : Router, public appService : AppService, public toastr : ToastrManager, public http: HttpClient) { }
 
   ngOnInit(): void {
   
@@ -142,7 +146,9 @@ export class UserDashboardComponent implements OnInit{
  }
 
  public goToViewDashboard (issueId) {
-   this.router.navigate(['/view/', issueId])
+  
+   this.router.navigate(['/issueView/', issueId])
+   console.log(issueId)
  }
   
   public getAllUsers: any = () => {
@@ -178,6 +184,7 @@ export class UserDashboardComponent implements OnInit{
         allData = apiResponse.data
         //console.log(allData)
         for(var x of allData){
+          //console.log(x.issueId)
           if(x.assigneeId === this.userId){
             this.allIssues.push(x)
           }
@@ -202,7 +209,7 @@ export class UserDashboardComponent implements OnInit{
     })
     
   }
-
+  
   public numOfDays: any = (issueId) => {
     this.appService.numOfDays(issueId).subscribe((apiResponse) => {
       if(apiResponse.status === 200) {
@@ -296,48 +303,9 @@ export class UserDashboardComponent implements OnInit{
   }
 
 
-  public scrollNextBacklog = () => {
-    document.getElementById('scrollBacklog').scrollBy(10, 0)
-  }
-
-  public scrollPreviousBacklog = () => {
-    document.getElementById('scrollBacklog').scrollBy(-10, 0)
-  }
-
-  public scrollNextProgress = () => {
-    document.getElementById('scrollProgress').scrollBy(100, 0)
-  }
-
-  public scrollPreviousProgress = () => {
-    document.getElementById('scrollProgress').scrollBy(-100, 0)
-  }
-
-  public scrollNextTest = () => {
-    document.getElementById('scrollTest').scrollBy(100, 0)
-  }
-
-  public scrollPreviousTest = () => {
-    document.getElementById('scrollTest').scrollBy(-100, 0)
-  }
-
-  public scrollNextDone = () => {
-    document.getElementById('scrollDone').scrollBy(100, 0)
-  }
-
-  public scrollPreviousDone = () => {
-    document.getElementById('scrollDone').scrollBy(-100, 0)
-  }
-
-  public scrollNextWatch = () => {
-    document.getElementById('scrollWatch').scrollBy(100, 0)
-  }
-
-  public scrollPreviousWatch = () => {
-    document.getElementById('scrollWatch').scrollBy(-100, 0)
-  }
-
+  
   public back = () => {
-    return this.toggler = true
+    return ((this.toggler = true) && (this.watchToggle = false))
   }
 
   public getNotification = () => {

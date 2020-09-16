@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { IssueCreateComponent } from './issue-create/issue-create.component'
 import { UserDashboardComponent } from './user-dashboard/user-dashboard.component';
 import { IssueEditComponent } from './issue-edit/issue-edit.component';
-import { IssueViewComponent } from './issue-view/issue-view.component';
+import { IssueViewComponent } from '../../app/dashboard/issue-view/issue-view.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -13,9 +13,11 @@ import { AuthGuardService } from '../auth-guard.service';
 import { DemoMaterialModule } from '../../app/material-module';
 import { NgxEditorModule } from 'ngx-editor';
 import { FileUploadModule } from 'ng2-file-upload';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { TableFilterPipe } from '.././table-filter.pipe';
 
 @NgModule({
-  declarations: [IssueCreateComponent, UserDashboardComponent, IssueEditComponent, IssueViewComponent],
+  declarations: [TableFilterPipe,IssueCreateComponent, UserDashboardComponent, IssueEditComponent, IssueViewComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -24,14 +26,16 @@ import { FileUploadModule } from 'ng2-file-upload';
     BrowserModule,
     FileUploadModule,
     NgxEditorModule,
+    NgxPaginationModule,
     DemoMaterialModule,
     ToastrModule.forRoot(),
     RouterModule.forChild ([
       { path : 'userdashboard', component : UserDashboardComponent, canActivate : [AuthGuardService] },
       { path : 'create', component : IssueCreateComponent, canActivate : [AuthGuardService] },
       { path : 'edit/:issueId', component : IssueEditComponent, canActivate : [AuthGuardService] },
-      { path : 'view/:issueId', component : IssueViewComponent, canActivate : [AuthGuardService] }
+      { path : 'issueView/:issueId', component : IssueViewComponent, canActivate : [AuthGuardService] }
     ])
-  ]
+  ],
+  exports: [TableFilterPipe]
 })
 export class DashboardModule { }

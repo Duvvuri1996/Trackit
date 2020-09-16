@@ -36,9 +36,10 @@
   </div>
  
 
-  <div class = "container" style = "border: 2px solid black; padding : 1em; border-radius : 20px; margin-bottom : 20px" *ngIf="!toggler">
+  <div class = "container" style = "border: 2px solid black; padding : 1em; border-radius : 20px; margin-bottom : 20px" *ngIf="!toggler && !watchToggle">
   <h2 style="text-align: center;height: 50px; padding: 0.3em; color: black;">Search result</h2>
-  <div class="container-fluid scrolling-wrapper-flexbox" id="scrollBackLog" >
+  <div class="container-fluid scrolling-wrapper-flexbox">
+
     <table  matSort (matSortChange)="sortData($event)"  class ="table table-bordered table-md" style = "height: 100px; overflow: auto; width :100%">
     <thead>
       <tr>
@@ -50,29 +51,30 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let x of searchData.slice().reverse()">
-        <td>{{x.issueTitle}}</td>
-        <td>{{x.userName}}</td>
-        <td>{{x.status}}</td>
-        <td>{{x.createdOn | date}}</td>
-        <td><a [routerLink]="['/view/',x.issueId]">View Issue</a></td>
+      <tr *ngFor="let search of searchData.slice().reverse()  | paginate : {  itemsPerPage: 5, currentPage: p }">
+        <td>{{search.issueTitle}}</td>
+        <td>{{search.userName}}</td>
+        <td>{{search.status}}</td>
+        <td>{{search.createdOn | date}}</td>
+        <td><a (click)="goToViewDashboard(search.issueId)" >View Issue</a></td>
+        
       </tr>
     </tbody>
-    <mat-paginator [length]="length"
-              [pageSize]="5">
-</mat-paginator>
+    
     </table>
+
   </div>
+  
   <div style="display: flex; justify-content: space-between">
-    <button class="btn btn-outline-dark my-2 my-sm-0" type="submit" (click)="scrollPreviousBacklog()">Previous</button>
+    <pagination-controls (pageChange)="p = $event"></pagination-controls>
     <button class="btn btn-outline-dark my-2 my-sm-0" type="submit" (click)="back()">Go Back</button>
-    <button id="buttonBacklog" class="btn btn-outline-dark my-2 my-sm-0" type="submit" (click)="scrollNextBacklog()">Next</button>
+    
   </div>
 </div>
 <div  *ngIf="toggler && !watchToggle">
 <div class = "container" style = "border: 2px solid black; padding : 1em; border-radius : 20px; margin-bottom : 20px">
   <h2 style="text-align: center;height: 50px; padding: 0.3em; color: black;">Issues Assigned to You</h2>
-  <div class="container-fluid scrolling-wrapper-flexbox" id="scrollBackLog" >
+  <div class="container-fluid scrolling-wrapper-flexbox" >
     <table  matSort (matSortChange)="sortDataIssues($event)"  class ="table table-bordered table-md" style = "height: 100px; overflow: auto; width :100%">
     <thead>
       <tr>
@@ -84,58 +86,52 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let x of allIssues">
-        <td>{{x.issueTitle}}</td>
-        <td>{{x.userName}}</td>
-        <td>{{x.status}}</td>
-        <td>{{x.createdOn | date}}</td>
-        <td><a [routerLink]="['/view/',x.issueId]">View Issue</a></td>
+      <tr *ngFor="let issue of allIssues  | paginate : {  itemsPerPage: 5, currentPage: p }">
+        <td>{{issue.issueTitle}}</td>
+        <td>{{issue.userName}}</td>
+        <td>{{issue.status}}</td>
+        <td>{{issue.createdOn | date}}</td>
+        <td><a (click)="goToViewDashboard(issue.issueId)" >View Issue</a></td>
       </tr>
     </tbody>
-    <mat-paginator [length]="length"
-              [pageSize]="5">
-</mat-paginator>
     </table>
   </div>
+</div>
   <div style="display: flex; justify-content: space-between">
-    <button class="btn btn-outline-dark my-2 my-sm-0" type="submit" (click)="scrollPreviousBacklog()">Previous</button>
+    <pagination-controls (pageChange)="p = $event"></pagination-controls>
     <button class="btn btn-outline-dark my-2 my-sm-0" type="submit" (click)="back()">Go Back</button>
-    <button id="buttonBacklog" class="btn btn-outline-dark my-2 my-sm-0" type="submit" (click)="scrollNextBacklog()">Next</button>
+    
   </div>
 </div>
-</div>
-<div *ngIf = "watchToggle">
+<div *ngIf = "watchToggle && watchDetails">
   <div class = "container" style = "border: 2px solid black; padding : 1em; border-radius : 20px; margin-bottom : 20px">
     <h2 style="text-align: center;height: 50px; padding: 0.3em; color: black;">Watch Issues</h2>
-    <div class="container-fluid scrolling-wrapper-flexbox" id="scrollBackLog" >
+    <div class="container-fluid scrolling-wrapper-flexbox" >
       <table  matSort (matSortChange)="sortDataWatch($event)"  class ="table table-bordered table-md" style = "height: 100px; overflow: auto; width :100%">
       <thead>
         <tr>
           <th mat-sort-header="issueTitle"class = "th-md">Title</th>
           <th mat-sort-header="userName"class = "th-md">Reporter</th>
+          <th class = "th-sm">View Issue</th>
           <th mat-sort-header="status"class = "th-md">Status</th>
           <th mat-sort-header="createdOn"class = "th-md">Created on </th>
-          <th class = "th-sm">View Issue</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let x of watchDetails">
-          <td>{{x.issueTitle}}</td>
-          <td>{{x.userName}}</td>
-          <td>{{x.status}}</td>
-          <td>{{x.createdOn | date}}</td>
-          <td><a [routerLink]="['/view/',x.issueId]">View Issue</a></td>
+        <tr *ngFor="let watch of watchDetails | paginate : {  itemsPerPage: 5, currentPage: p }">
+          <td>{{watch.issueTitle}}</td>
+          <td>{{watch.userName}}</td>
+          <td>{{watch.status}}</td>
+          <td>{{watch.createdOn | date}}</td>
+          <td><a (click)="goToViewDashboard(watch.issueId)" >View Issue</a></td>
         </tr>
       </tbody>
-      <mat-paginator [length]="length"
-                [pageSize]="5">
-  </mat-paginator>
       </table>
     </div>
     <div style="display: flex; justify-content: space-between">
-      <button class="btn btn-outline-dark my-2 my-sm-0" type="submit" (click)="scrollPreviousBacklog()">Previous</button>
+      <pagination-controls (pageChange)="p = $event"></pagination-controls>
       <button class="btn btn-outline-dark my-2 my-sm-0" type="submit" (click)="back()">Go Back</button>
-      <button id="buttonBacklog" class="btn btn-outline-dark my-2 my-sm-0" type="submit" (click)="scrollNextBacklog()">Next</button>
+      
     </div>
   </div>
   

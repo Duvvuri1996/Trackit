@@ -17,6 +17,7 @@ export class IssueCreateComponent implements OnInit {
   public attachmentList : any = [];
 
   constructor(public router : Router, public appService : AppService, public toastr : ToastrManager, public route : ActivatedRoute) { 
+    this.getAllUsers();
       this.uploader.onCompleteItem = (item:any, response:any, status:any, headers:any)=> {
       this.attachmentList.push(JSON.parse(response))
       console.log(this.attachmentList)
@@ -40,7 +41,7 @@ export class IssueCreateComponent implements OnInit {
   ngOnInit(): void {
     this.userName = Cookie.get('receiverName');
     this.userId = Cookie.get('receiverId');
-    this.getAllUsers();
+    
   }
 
   public getAllUsers = () => {
@@ -71,7 +72,11 @@ export class IssueCreateComponent implements OnInit {
 
     for(let y of this.attachmentList) {
       this.fileId.push(y.file.id)
+      console.log(y.file.id)
+      console.log(this.fileId)
     }
+
+    this.assigneeName = x
     if (!this.issueTitle) {
       this.toastr.warningToastr('Enter Title')
     }
@@ -93,7 +98,7 @@ export class IssueCreateComponent implements OnInit {
         assigneeName : this.assigneeName,
         assigneeId : this.assigneeId, //this.selectedUser
         status : this.status,
-        images : this.images,
+        images : this.fileId,
         userName : this.userName,
         userId : this.userId
       }
@@ -102,6 +107,8 @@ export class IssueCreateComponent implements OnInit {
         console.log('create issue')
         if(apiResponse.status === 200){
           this.toastr.successToastr('Issue created successfully')
+          console.log(apiResponse.data.images)
+          console.log(apiResponse.data)
           setTimeout(() => {
             this.router.navigate(['/userdashboard'])
           }, 2000)

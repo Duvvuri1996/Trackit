@@ -4,7 +4,8 @@ import { ToastrManager } from 'ng6-toastr-notifications';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
-import { SaveAs } from 'file-saver';
+import * as SaveAs from 'file-saver';
+
 import { FileSelectDirective, FileUploader } from 'ng2-file-upload';
 
 @Component({
@@ -14,7 +15,7 @@ import { FileSelectDirective, FileUploader } from 'ng2-file-upload';
 })
 export class IssueEditComponent implements OnInit {
 
-  private uri = 'http://localhost:3000/api/v1/issue/uploads';
+  private uri = '/api/v1/issue/uploads';
   uploader : FileUploader = new FileUploader({url : this.uri})
   public attachmentList : any = [];
   public singleAttachment : any = [];
@@ -47,8 +48,12 @@ export class IssueEditComponent implements OnInit {
     this.userName = Cookie.get('receiverName');
     this.userId = Cookie.get('receiverId');
     this.getAllUsers();
-    this.getSingleIssue(this.issueId);
+    this.getSingleIssue();
     this.getAttachments();
+  }
+
+  public goBack() {
+    this.location.back()
   }
 
   public getAllUsers = () => {
@@ -65,20 +70,20 @@ export class IssueEditComponent implements OnInit {
     })
     this.allUsers = users
   }
-  public onSelectingUser = (user) => {
-    this.selectedUser = user
-  }
+  
 
   public downloadFile = (index) => {
-    let fileName = this.fileName[index]
-    this.appService.downloadFile(fileName).subscribe((apiResponse) => {
-      SaveAs(apiResponse, apiResponse.fileName)
+    let fileId = this.fileName[index]
+    this.appService.downloadFile(fileId).subscribe((apiResponse) => {
+      SaveAs(apiResponse, apiResponse["filename"])
+      console.log(apiResponse)
     })
   }
 
-  public getSingleIssue = (issueId) => {
-    this.appService.singleIssue(issueId).subscribe((apiResponse) => {
+  public getSingleIssue = () => {
+    this.appService.singleIssue(this.issueId).subscribe((apiResponse) => {
       if(apiResponse.status === 200) {
+        console.log(apiResponse.data)
         this.issue = apiResponse.data
         this.issueTitle = apiResponse.data.issueTitle
         this.issueDescription = apiResponse.data.issueDescription
@@ -100,11 +105,15 @@ export class IssueEditComponent implements OnInit {
   public getAttachments = () => {
     this.appService.getAllFiles().subscribe((apiResponse) => {
         this.attachmentList.push(apiResponse.data)
+        //console.log(this.attachmentList)
         for(let x of this.attachmentList){
           for(let y of x){
+            //console.log(y._id)
             for(let a of this.fileId){
+              //console.log(a)
               if(a === y._id){
-                this.fileName.push(y.fileName)
+                this.fileName.push(y.filename)
+                console.log(this.fileName)
               }
             }
           }
@@ -113,10 +122,17 @@ export class IssueEditComponent implements OnInit {
   }
 
   public editIssue: any = () => {
+    for(let x of this.allUsers){
+      if(x.userId === this.assigneeId){
+        var y = x.firstName + " " + x.lastName
+      }
+    }
 
     for(let y of this.singleAttachment) {
       this.fileId.push(y.file.id)
     }
+
+    this.assigneeName = y
     if (!this.issueTitle) {
       this.toastr.warningToastr('enter issueTitle')
     }
@@ -133,16 +149,16 @@ export class IssueEditComponent implements OnInit {
     let data = {
       issueTitle : this.issueTitle,
       issueDescription : this.issueDescription,
-      assigneeName : this.selectedUser.userName,
-      assigneeId : this.selectedUser.userId, //this.selectedUser
+      assigneeName : this.assigneeName,
+      assigneeId : this.assigneeId,
       status : this.status,
-      images : this.images
+      images : this.fileId
     }
     this.appService.editIssue(data).subscribe((apiResponse) => {
       if(apiResponse.status === 200) { 
         this.toastr.successToastr('Issues updated successfully')
         setTimeout(() => {
-          this.router.navigate([`/view/]${this.issueId}`])
+          this.router.navigate([`/issueView/${this.issueId}`])
         }, 2000)
       } else {
         this.toastr.warningToastr('Please update again...')

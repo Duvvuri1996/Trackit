@@ -1,1 +1,57 @@
-<p>issue-view works!</p>
+<div class=" container-fluid">
+    <div class="row p-5" style="text-align:left">
+        <div class="col-md-12">
+            <div class="bg-div">
+                <div class="row" style="justify-items: center" *ngIf="issueData">
+                    <div class="col-md-12">
+                        <h2>{{issueData.issueTitle}}</h2>
+                        <hr>
+                        <h5>Created by {{issueData.userName}} on {{issueData.createdOn | date}}</h5>
+                        <hr>
+                        <h4>Description of the Issue:-</h4>
+                        <p>{{issueData.issueDescription}}</p>
+                        <hr>
+                        <h5>Status - {{issueData.status}}</h5>
+                        <hr>
+                        <h5>Assigned To - {{issueData.assigneeName}}</h5>
+                        <hr>
+                        <h6>Attachments -</h6>
+                        <a *ngFor="let name of fileName; let i = index" (click)="downloadFile(i)" style="cursor: pointer; color: blue">{{name}}
+                        <br></a>
+                    </div>
+                </div>
+                <hr>
+                <div class="row p-3" *ngIf="issueData" style="display: flex; justify-content: space-between">
+                    <a class="btn btn-dark btn-md" (click)="goBack()" style="color: white; text-align: right;  margin-top: 10px">Go Back</a>
+                    <a class="btn btn-dark btn-md" style="margin-top: 10px; color: white; text-align: right;" (click)="deleteIssue()">Delete</a>
+                    <a class="btn btn-dark btn-md" [routerLink]="['/edit/',issueData.issueId]" style="margin-top: 10px; text-align: right;">Edit</a>
+                    <a class="btn btn-dark btn-md" style="color: white; margin-top: 5px; text-align: right;" (click)="watch()" >Watch</a>
+                
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12" >
+        <ul class="list-group" style="width:100%; padding-bottom: 5vh;">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">Comment here</span>
+                </div>
+                <textarea class="form-control" aria-label="With textarea" [(ngModel)]="comment" placeholder="Comment here...."></textarea>
+                <button class="btn btn-secoundry" style="float:Right" (click)="addComment()">Comment</button>
+              </div>   
+              <span *ngIf="allComments">
+                <span *ngFor="let comment of allComments.slice().reverse()">
+                  <li class="list-group-item list-group-item-light"><b>{{comment.reporterName}}</b><br>
+                  {{comment.comment}}
+                  <br>
+                  <span style="font-size:smaller">{{comment.createdOn | date:"short"}}</span>
+                  <br>
+                  <button class="btn btn-dark" (click)="deleteComment(comment.commentId)">Delete</button>
+                  <br>
+                  </li>
+                </span>
+              </span>     
+        </ul>
+    </div>
+</div>

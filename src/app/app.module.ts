@@ -21,6 +21,8 @@ import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 import { DemoMaterialModule } from './material-module';
 import { NgxEditorModule } from 'ngx-editor';
 import { FileUploadModule } from 'ng2-file-upload';
+import { NgxPaginationModule } from 'ngx-pagination';
+
 
 @NgModule({
   declarations: [
@@ -34,6 +36,7 @@ import { FileUploadModule } from 'ng2-file-upload';
     DemoMaterialModule,
     MatNativeDateModule,
     DashboardModule,
+    NgxPaginationModule,
     ToastrModule.forRoot(),
     UserModule,
     BrowserAnimationsModule,

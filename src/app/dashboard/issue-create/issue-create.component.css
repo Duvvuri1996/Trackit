@@ -1,7 +1,6 @@
 
-  .form {
-      border: 2px solid grey;
-      border-radius: 20px;
-      padding: 20px;
-      background: #e8eaf6
-  }
+.bg-div {
+  border: 2px solid grey;
+  border-radius: 20px;
+  padding: 20px;
+}

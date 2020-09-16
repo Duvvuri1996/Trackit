@@ -118,7 +118,7 @@ export class AppService {
   }
 
   public singleIssue(issueId) : Observable<any> {
-    return this.http.get(`${this.url}/issue/${issueId}`)
+    return this.http.get(`${this.url}/issue/singleissue/${issueId}`)
   }
 
   public issueByUserId(userId) : Observable<any> {
@@ -182,11 +182,11 @@ export class AppService {
   }
 
   public getAllFiles() : Observable<any> {
-    return this.http.get(`${this.url}/issue/allFiles`)
+    return this.http.get(`${this.url}/issue/allfiles`)
   }
 
-  public downloadFile(fileName) : Observable<any> {
-    return this.http.get(`${this.url}/downloadFile/${fileName}`)
+  public downloadFile(filename) : Observable<any> {
+    return this.http.get(`${this.url}/issue/downloadFile/${filename}`)
   }
 
   public getAllNotifications() : Observable<any> {

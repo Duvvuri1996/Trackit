@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AppService } from '../../app.service';
 import { Router } from '@angular/router';
 import { ToastrManager} from 'ng6-toastr-notifications';
-import * as countryNames from '../../../assets/countryNames.json';
+
 import { Cookie } from 'ng2-cookies/ng2-cookies';
 
 @Component({
@@ -16,18 +16,12 @@ export class SignupComponent implements OnInit {
   public lastName : String;
   public userEmail : String;
   public userPassword : any;
-  public country : String;
   public mobileNumber : Number;
-  public countries : any[] = [];
-  public sortedCountry : any[] = [];
-
 
   constructor(public appService : AppService, public router : Router, public toastr : ToastrManager) { }
 
 
   ngOnInit(): void {
-    this.getCountries();
-    
   }
 
   public goToSignin() {
@@ -38,24 +32,6 @@ export class SignupComponent implements OnInit {
     this.router.navigate(['/recoverymail'])
   }
 
-  public getCountries: any = () => {
-    let data = countryNames
-    let x
-    for (x in data) {
-      //let singleCountry = data[x]
-      let singleCountry = {
-        name: data[x],
-        code: x
-      }
-      this.countries.sort().push(singleCountry)
-      console.log(data)
-      console.log(singleCountry.code)
-      console.log(this.countries)
-      //this.sortedCountry = this.countries.sort()
-    }
-    //this.countries.sort()
-  }
-
   public signup: any = () => {
     if(!this.firstName) {
       this.toastr.warningToastr('firstName is required')
@@ -63,9 +39,7 @@ export class SignupComponent implements OnInit {
       this.toastr.warningToastr('userEmail is required')
     } else if(!this.userPassword) {
       this.toastr.warningToastr('userPassword is required')
-    } /**else if(!this.country) {
-      this.toastr.warningToastr('country is required')
-    } **/else if(!this.mobileNumber) {
+    }else if(!this.mobileNumber) {
       this.toastr.warningToastr('mobileNumber is required')
     }
 
@@ -75,7 +49,6 @@ export class SignupComponent implements OnInit {
         lastName : this.lastName,
         userEmail : this.userEmail,
         userPassword : this.userPassword,
-        //country : this.country,
         mobileNumber : this.mobileNumber
       }
       this.appService.signUp(data).subscribe((apiResponse) => {

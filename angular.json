@@ -28,11 +28,9 @@
               "src/assets"
             ],
             "styles": [
+              "/home/sowmya/trackIt/trackItFrontEnd/node_modules/font-awesome/css/font-awesome.css",
               {
                 "input" :"/home/sowmya/trackIt/trackItFrontEnd/node_modules/bootstrap/dist/css/bootstrap.min.css" 
-              },
-              {
-                "input" : "/home/sowmya/trackIt/trackItFrontEnd/node_modules/font-awesome/css/font-awesome.css"
               },
               "src/styles.css"
               

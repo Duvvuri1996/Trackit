@@ -5,7 +5,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
 import * as SaveAs from 'file-saver';
-
+import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { FileSelectDirective, FileUploader } from 'ng2-file-upload';
 
 @Component({
@@ -14,6 +14,10 @@ import { FileSelectDirective, FileUploader } from 'ng2-file-upload';
   styleUrls: ['./issue-edit.component.css']
 })
 export class IssueEditComponent implements OnInit {
+
+  issueDescription;
+  config: AngularEditorConfig = {
+     editable: true, spellcheck: true, height: '15rem', minHeight: '5rem', placeholder: 'Enter text here...', translate: 'yes' }
 
   private uri = '/api/v1/issue/uploads';
   uploader : FileUploader = new FileUploader({url : this.uri})
@@ -28,7 +32,6 @@ export class IssueEditComponent implements OnInit {
   }
   
   public issueTitle : String;
-  public issueDescription : String;
   public assigneeId : String;
   public assigneeName : String;
   public userName : String;
@@ -102,6 +105,9 @@ export class IssueEditComponent implements OnInit {
       }
     })
   }
+
+ 
+
   public getAttachments = () => {
     this.appService.getAllFiles().subscribe((apiResponse) => {
         this.attachmentList.push(apiResponse.data)
@@ -112,7 +118,7 @@ export class IssueEditComponent implements OnInit {
             for(let a of this.fileId){
               //console.log(a)
               if(a === y._id){
-                this.fileName.push(y.filename)
+                this.fileName.push(y)
                 console.log(this.fileName)
               }
             }
@@ -120,6 +126,8 @@ export class IssueEditComponent implements OnInit {
         }
     })
   }
+
+  
 
   public editIssue: any = () => {
     for(let x of this.allUsers){
@@ -152,7 +160,8 @@ export class IssueEditComponent implements OnInit {
       assigneeName : this.assigneeName,
       assigneeId : this.assigneeId,
       status : this.status,
-      images : this.fileId
+      images : this.fileId,
+      issueId : this.issueId
     }
     this.appService.editIssue(data).subscribe((apiResponse) => {
       if(apiResponse.status === 200) { 

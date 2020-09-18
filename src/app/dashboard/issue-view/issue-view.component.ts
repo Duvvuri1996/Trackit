@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AppService } from '../../app.service';
 import { ToastrManager } from 'ng6-toastr-notifications';
-
 import { Location } from '@angular/common';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
 import { SaveAs } from 'file-saver';
+import { subscribeOn } from 'rxjs/operators';
 
 @Component({
   selector: 'app-issue-view',
@@ -26,7 +26,7 @@ export class IssueViewComponent implements OnInit {
   public count : Number;
   public userId :  any;
   public userName : any;
-  public toggler : boolean;
+  public toggler : boolean = false;
   
   constructor( private route : ActivatedRoute, private location : Location, public router : Router, public appService : AppService, public toastr : ToastrManager) { }
 
@@ -45,8 +45,6 @@ export class IssueViewComponent implements OnInit {
     this.getAllComments();
 
     this.watchCount();
-
-    this.allComments;
   }
 
   public singleIssue = () => {
@@ -109,26 +107,28 @@ export class IssueViewComponent implements OnInit {
   public deleteIssue = () => {
     this.appService.deleteIssue(this.issueId).subscribe((apiResponse) => {
       if(apiResponse.status === 200){
-        this.toastr.successToastr('Deleted Successfully')
+        this.appService.removeAllWatcher(this.issueId).subscribe((apiResponse) => {
+          this.toastr.successToastr('Deleted Successfully')
         setTimeout(()=>{
           this.router.navigate(['/userdashboard']);
-        },2000)
+        },1000)
+        })
       }
     })
   }
 
   public watch = () => {
     this.appService.postWatch(this.issueId).subscribe((apiResponse) => {
-      
-        if(apiResponse.status === 200) {
-          
-          this.toastr.successToastr('Added to watch list, will be notified if any changes in the issue')
-        } else {
-          
-          this.toastr.errorToastr('Unable to post watch')
-      } 
+      if(apiResponse.status === 200){
+        this.toastr.successToastr("Succussfully added to Watch list...You will be further notified of changes in issue")
+        this.toggler = true
+      }
+      else if(apiResponse.status === 404){
+        this.toastr.infoToastr("You are already under watch list")
+      }
+    }, (err) => {
+      this.toastr.errorToastr("Some unkown error occured")
     })
-    
   }
 
   public addComment = () => {
@@ -150,15 +150,11 @@ export class IssueViewComponent implements OnInit {
   }
 
   public deleteComment = (commentId) => {
-
     this.appService.deleteComment(commentId).subscribe((apiResponse) => {
       this.toastr.successToastr(apiResponse.message)
+      this.getAllComments()
     })
-
-    this.getAllComments()
   }
-
-  
 
   public watchCount = () => {
     this.appService.watchCount(this.issueId).subscribe((apiResponse) => {
@@ -167,6 +163,23 @@ export class IssueViewComponent implements OnInit {
       } else {
         this.toastr.infoToastr('No watch list for this issue')
         console.log(this.count+' count is this')
+      }
+    })
+  }
+
+  public deleteWatcher = () => {
+    let data = {
+      watchId : this.userId,
+      issueId : this.issueId
+    }
+    this.appService.deleteWatch(data).subscribe((apiResponse) => {
+      if(apiResponse.status === 200){
+        this.toastr.successToastr("Your watch ended!")
+        setTimeout(() => {
+          this.router.navigate(['/userdashboard'])
+        }, 1000)
+      } else {
+        this.toastr.errorToastr("Unable to Unwatch...please try again")
       }
     })
   }

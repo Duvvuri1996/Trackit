@@ -10,13 +10,10 @@
                     Title is required
             </div>
             <div class="form-group">
-                <label style="font-size: 25px;" for="issueDescription">Description</label>
-                <ngx-editor id="issueDescription" placeholder="Enter text here..." [spellcheck]="true" name="issueDescription" [(ngModel)]="issueDescription"
-                  name="issueDescription" #description ="ngModel" required></ngx-editor>
-            </div>
-            <div [hidden]="description.valid || description.pristine" class="alert alert-danger">
-                Description is Must
-            </div>
+              <label style="font-size: 25px;" for="issueDescription">Description</label>
+              <angular-editor id="issueDescription" [config]="config" [(ngModel)]="issueDescription"  ></angular-editor>
+          </div>
+            
             <div class="form-group">
                 <label style="font-size: 25px;">Status</label>
                 <select [(ngModel)]="status" #category="ngModel" name="issueStatus" class="form-control" id="Status"
@@ -36,8 +33,8 @@
             </div>
             <div class="form-group" action="/api/upload" method="POST" enctype="multipart/form-data" style="margin-bottom: 20px; height: auto;">
                 <label style="font-size: 25px; font-style: bold">Attachments</label>
-                <div class="col-md-12">
-                <a *ngFor="let name of fileName; let i = index" (click)="downloadFile(i)" style="cursor: pointer; color: blue">{{name}}
+                <div class="col-md-12" *ngFor="let name of fileName; let i = index">
+                  <a  target="_blank" href='/api/v1/issue/downloadFile/{{name.filename}}' style="cursor: pointer; color: blue">View Image-{{name.filename}}
                     <br></a>
                   </div>
                     <hr>
@@ -53,14 +50,14 @@
                     </div>
                     <div>
                       <button style="margin:20px" type="button" class="btn btn-dark" (click)="item.upload()">Upload</button>
-                      <button  type="button" class="btn btn-danger" (click)="item.remove()">Cancel</button>
+                      <button  type="button" class="btn btn-dark" (click)="item.remove()">Cancel</button>
                     </div>
                   </div>
                 </div>
               </div>
               <div style="display: flex; justify-content: space-between">
-                <button type="submit" class="btn btn-dark btn-lg" [routerLink]="['/userdashboard']"> Cancel</button>
-                <button type="submit" class="btn btn-dark btn-lg" (click)="goBack()"> Go Back</button>
+                <button type="submit" class="btn btn-dark btn-lg" [routerLink]="['/userdashboard']"> Dashboard</button>
+                <button type="submit" class="btn btn-dark btn-lg" (click)="goBack()"> Cancel</button>
                 <button type="submit"  class="btn btn-dark btn-lg" (click)="editIssue()">Update Post</button>
               </div>
         

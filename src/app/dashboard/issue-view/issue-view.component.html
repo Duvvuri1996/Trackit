@@ -15,14 +15,14 @@
                         <hr>
                         <h5>Assigned To - {{issueData.assigneeName}}</h5>
                         <hr>
-                        <h6>Attachments -</h6>
-                        <a *ngFor="let name of fileName; let i = index" (click)="downloadFile(i)" style="cursor: pointer; color: blue">{{name}}
+                        <h6 *ngIf="this.fileName">Attachments -</h6>
+                        <a *ngFor="let name of fileName; let i = index" target="_blank" href='/api/v1/issue/downloadFile/{{name}}' style="cursor: pointer; color: blue">View Image-{{name}}
                         <br></a>
                     </div>
                 </div>
                 <hr>
                 <div class="row p-3" *ngIf="issueData" style="display: flex; justify-content: space-between">
-                    <a class="btn btn-dark btn-md" (click)="goBack()" style="color: white; text-align: right;  margin-top: 10px">Go Back</a>
+                    <a class="btn btn-dark btn-md" [routerLink]="['/userdashboard']" style="color: white; text-align: right;  margin-top: 10px">Go Back</a>
                     <a class="btn btn-dark btn-md" style="margin-top: 10px; color: white; text-align: right;" (click)="deleteIssue()">Delete</a>
                     <a class="btn btn-dark btn-md" [routerLink]="['/edit/',issueData.issueId]" style="margin-top: 10px; text-align: right;">Edit</a>
                     <a class="btn btn-dark btn-md" style="color: white; margin-top: 5px; text-align: right;" (click)="watch()" >Watch</a>

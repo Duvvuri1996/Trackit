@@ -1,17 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { AppService } from '../../app.service';
 import { ToastrManager } from 'ng6-toastr-notifications';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FileUploader, FileSelectDirective } from 'ng2-file-upload';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
+import { AngularEditorConfig } from '@kolkov/angular-editor';
+//import doc from '../doc';
 
 @Component({
   selector: 'app-issue-create',
   templateUrl: './issue-create.component.html',
-  styleUrls: ['./issue-create.component.css']
+  styleUrls: ['./issue-create.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class IssueCreateComponent implements OnInit {
 
+  issueDescription = '';
+  config: AngularEditorConfig = {
+     editable: true, spellcheck: true, height: '15rem', minHeight: '5rem', placeholder: 'Enter text here...', translate: 'yes' }
+  
   private uri = '/api/v1/issue/uploads';
   public uploader : FileUploader = new FileUploader({url : this.uri})
   public attachmentList : any = [];
@@ -24,8 +31,8 @@ export class IssueCreateComponent implements OnInit {
     }
   }
 
+  
   public issueTitle : String;
-  public issueDescription : String;
   public assigneeId : String;
   public assigneeName : String;
   public userName : String;
@@ -35,8 +42,7 @@ export class IssueCreateComponent implements OnInit {
   public fileId = [];
   public status : any;
   public selectedUser : any;
-  public allStatus = ["Backlog", "In-Progress", "In-Test", "Done"];
-  
+  public allStatus = ["Backlog", "In-Progress", "In-Test", "Done"]; 
 
   ngOnInit(): void {
     this.userName = Cookie.get('receiverName');
@@ -92,6 +98,8 @@ export class IssueCreateComponent implements OnInit {
     else if (!this.status) {
       this.toastr.warningToastr('Status should not be empty')
     } else {
+      
+      
       let data = {
         issueTitle : this.issueTitle,
         issueDescription : this.issueDescription,
@@ -102,7 +110,7 @@ export class IssueCreateComponent implements OnInit {
         userName : this.userName,
         userId : this.userId
       }
-
+      console.log(this.issueDescription)
       this.appService.createIssue(data).subscribe((apiResponse) => {
         console.log('create issue')
         if(apiResponse.status === 200){

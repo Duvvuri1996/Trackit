@@ -62,15 +62,15 @@ export class UserDashboardComponent implements OnInit{
     this.userName = Cookie.get('receiverName');
     this.userId = Cookie.get('receiverId');
     this.firstChar = this.userName[0];
-    //this.getSingleUserIssue();
     this.getAllUsers();
     this.socialUsers();
     this.notifyCount();
-    //this.searchIssue();
-    //this.numOfDays();
     this.getNotification();
     this.getAllIssues();                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
   }
+
+  ngDoCheck() {}
+
   public compare(a: number | string, b: number | string, isAsc: boolean) {
     return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
   }
@@ -291,18 +291,6 @@ export class UserDashboardComponent implements OnInit{
       }
     })
   }
-
-  public notifyCount = () =>{
-    this.appService.notificationCount(this.userId).subscribe(
-      (apiResponse)=>{
-        if(apiResponse.status === 200){
-          return this.notify = true
-        }
-      }
-    )
-  }
-
-
   
   public back = () => {
     return ((this.toggler = true) && (this.watchToggle = false))
@@ -310,11 +298,10 @@ export class UserDashboardComponent implements OnInit{
 
   public getNotification = () => {
     this.appService.getAllNotifications().subscribe((apiResponse) => {
-      var data = apiResponse.data
-      this.notifications.push(data)
+      this.notifications.push(apiResponse.data)
       //console.log(this.notifications)
       for(var x of this.notifications){
-        if(x !== null) {
+        if(x.userId === this.userId) {
           for(let y of x) {
             if(y.notificationCount === 1){
               this.count.push(y.notificationCount)
@@ -337,5 +324,15 @@ export class UserDashboardComponent implements OnInit{
         }
       }
     })
+  }
+
+  public notifyCount = () =>{
+    this.appService.notificationCount(this.userId).subscribe(
+      (apiResponse)=>{
+        if(apiResponse.status === 200){
+          return this.notify = true
+        }
+      }
+    )
   }
 }

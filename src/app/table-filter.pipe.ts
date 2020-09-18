@@ -1,14 +1,20 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform, Injectable } from '@angular/core';
 
 @Pipe({
-  name: 'tableFilter'
+  name: 'tableFilter',
 })
+@Injectable()
 export class TableFilterPipe implements PipeTransform {
+  transform(items: any[], field: string, value: string): any[] {
+    if (!items) {
+      return [];
+    }
+    if (!field || !value) {
+      return items;
+    }
 
-  transform(list: any[], filters: Object) {
-    const keys       = Object.keys(filters).filter(key => filters[key]);
-    const filterUser = user => keys.every(key => user[key] === filters[key]);
-    return keys.length ? list.filter(filterUser) : list;
+    return items.filter((singleItem) =>
+      singleItem[field].toLowerCase().includes(value.toLowerCase())
+    );
   }
-
 }

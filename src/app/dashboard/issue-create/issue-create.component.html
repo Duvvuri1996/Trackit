@@ -10,13 +10,10 @@
                     Title is required
             </div>
             <div class="form-group">
-                <label style="font-size: 25px;" for="issueDescription">Description</label>
-                <ngx-editor id="issueDescription" placeholder="Enter text here..." [spellcheck]="true" name="issueDescription" [(ngModel)]="issueDescription"
-                  name="issueDescription" #description ="ngModel" required></ngx-editor>
-            </div>
-            <div [hidden]="description.valid || description.pristine" class="alert alert-danger">
-                Description is Must
-            </div>
+              <label style="font-size: 25px;" for="issueDescription">Description</label>
+              <angular-editor id="issueDescription" [config]="config" [(ngModel)]="issueDescription"  ></angular-editor>
+          </div>
+            
             <div class="form-group">
                 <label style="font-size: 25px;">Status</label>
                 <select [(ngModel)]="status" #category="ngModel" name="issueStatus" class="form-control" id="Status"

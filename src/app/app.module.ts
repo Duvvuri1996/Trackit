@@ -19,7 +19,7 @@ import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from '@angular/material/form-field';
 import {MatNativeDateModule} from '@angular/material/core';
 import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 import { DemoMaterialModule } from './material-module';
-import { NgxEditorModule } from 'ngx-editor';
+import { AngularEditorModule } from '@kolkov/angular-editor';
 import { FileUploadModule } from 'ng2-file-upload';
 import { NgxPaginationModule } from 'ngx-pagination';
 
@@ -44,7 +44,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
     FormsModule,
     FileUploadModule,
     ReactiveFormsModule,
-    NgxEditorModule,
+    AngularEditorModule,
     RouterModule.forRoot([
       { path : 'signin', component : SigninComponent, pathMatch : 'full' },
       { path : '', redirectTo : '/signin', pathMatch : 'full' },

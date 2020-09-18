@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-
 import { Observable } from 'rxjs';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
 import 'rxjs/add/operator/catch';
@@ -129,9 +128,14 @@ export class AppService {
     return this.http.get(`${this.url}/issue/assigneeid/${assigneeId}`)
   }
 
-  public postWatch(data) : Observable<any> {
+  public removeAllWatcher(issueId) : Observable<any> {
+    let data = {}
+    return this.http.post(`${this.url}/issue/removeWatchersOnIssue/${issueId}`, data)
+  }
+
+  public postWatch(issueId) : Observable<any> {
     const params = new HttpParams()
-    .set('issueId', data.issueId)
+    .set('issueId', issueId)
     .set('watchId', Cookie.get('receiverId'))
     return this.http.post(`${this.url}/issue/watch`, params)
   }
@@ -189,6 +193,11 @@ export class AppService {
     return this.http.get(`${this.url}/issue/downloadFile/${filename}`)
   }
 
+  public deleteFile(id) : Observable<any> {
+    let data = {}
+    return this.http.post(`${this.url}/issue/deleteFile/${id}`, data)
+  }
+
   public getAllNotifications() : Observable<any> {
     return this.http.get(`${this.url}/issue/notification/${Cookie.get('receiverId')}`)
   }
@@ -197,5 +206,12 @@ export class AppService {
     const params = new HttpParams()
     .set('userId', userId)
     return this.http.post(`${this.url}/issue/notifycount`, params)
+  }
+
+  public deleteWatch(data) : Observable<any> {
+    const params = new HttpParams()
+    .set('issueId', data.issueId)
+    .set('watchId', data.watchId)
+    return this.http.post(`${this.url}/issue/deleteWatch`, params)
   }
 }

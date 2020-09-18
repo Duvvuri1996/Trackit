@@ -15,6 +15,11 @@ import { NgxEditorModule } from 'ngx-editor';
 import { FileUploadModule } from 'ng2-file-upload';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { TableFilterPipe } from '.././table-filter.pipe';
+import { AngularEditorModule } from '@kolkov/angular-editor';
+import { MatTableModule } from '@angular/material/table';
+import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [TableFilterPipe,IssueCreateComponent, UserDashboardComponent, IssueEditComponent, IssueViewComponent],
@@ -25,7 +30,11 @@ import { TableFilterPipe } from '.././table-filter.pipe';
     BrowserAnimationsModule,
     BrowserModule,
     FileUploadModule,
-    NgxEditorModule,
+    AngularEditorModule,
+    MatButtonModule,
+    MatInputModule,
+    MatTableModule,
+    MatSelectModule,
     NgxPaginationModule,
     DemoMaterialModule,
     ToastrModule.forRoot(),

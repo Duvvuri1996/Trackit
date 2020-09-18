@@ -45,14 +45,6 @@
       <label for="inputLastName" class="sr-only">LastName</label>
   
       <input type="text" id="inputLastName" class="form-control" [(ngModel)]="lastName" placeholder="LastName">
-
-      <span>Country: </span>
-      <label for="inputCountry" class="sr-only">Country</label>
-  
-      <select id="inputCountry" class="form-control" [(ngModel)]="country" class ="form-control" placeholder="Country">
-        <option value="">Please select</option>
-        <option *ngFor = "let country of countries" [value] = "country.name" >{{ country.name }}</option> 
-      </select>
       <span>MobileNumber: </span>
   
         <label for="inputMobile" class="sr-only">Mobile Number</label>

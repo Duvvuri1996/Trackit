@@ -26,7 +26,7 @@
     <div class="btn-group">
       <button class="btn btn-outline-dark btn-lg dropdown-toggle" type="button" id = "dropdownMenuButton" (click)="notifyCount()" data-toggle="dropdown"
         aria-haspopup="true" aria-expanded="false">
-        Notifications <span class="badge badge-dark" *ngIf="!notify">{{count.length}}</span>
+        Notifications <span class="badge badge-dark" *ngIf="!notify" style="color: blanchedalmond;">{{count.length}}</span>
       </button>
       <div aria-labelledby="dropdownMenuButton" class="dropdown-menu">
         <a *ngFor="let x of notifyData.slice().reverse()" style="color: black;" (click)="goToViewDashboard(x.issueId)">{{x.description}}</a>
@@ -36,10 +36,9 @@
   </div>
  
 
-  <div class = "container" style = "border: 2px solid black; padding : 1em; border-radius : 20px; margin-bottom : 20px" *ngIf="!toggler && !watchToggle">
+  <div class = "container" style = "border: 2px solid black; padding : 1em; border-radius : 20px; margin-bottom : 20px" *ngIf="!toggler">
   <h2 style="text-align: center;height: 50px; padding: 0.3em; color: black;">Search result</h2>
   <div class="container-fluid scrolling-wrapper-flexbox">
-
     <table  matSort (matSortChange)="sortData($event)"  class ="table table-bordered table-md" style = "height: 100px; overflow: auto; width :100%">
     <thead>
       <tr>
@@ -50,19 +49,17 @@
         <th class = "th-sm">View Issue</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody id="myTable">
       <tr *ngFor="let search of searchData.slice().reverse()  | paginate : {  itemsPerPage: 5, currentPage: p }">
         <td>{{search.issueTitle}}</td>
         <td>{{search.userName}}</td>
         <td>{{search.status}}</td>
         <td>{{search.createdOn | date}}</td>
         <td><a (click)="goToViewDashboard(search.issueId)" >View Issue</a></td>
-        
       </tr>
     </tbody>
-    
     </table>
-
+    
   </div>
   
   <div style="display: flex; justify-content: space-between">
@@ -103,7 +100,7 @@
     
   </div>
 </div>
-<div *ngIf = "watchToggle && watchDetails">
+<div *ngIf = "watchToggle && watchDetails && !toggler">
   <div class = "container" style = "border: 2px solid black; padding : 1em; border-radius : 20px; margin-bottom : 20px">
     <h2 style="text-align: center;height: 50px; padding: 0.3em; color: black;">Watch Issues</h2>
     <div class="container-fluid scrolling-wrapper-flexbox" >

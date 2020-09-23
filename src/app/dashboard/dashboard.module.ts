@@ -11,7 +11,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule  } from 'ng6-toastr-notifications';
 import { AuthGuardService } from '../auth-guard.service';
 import { DemoMaterialModule } from '../../app/material-module';
-import { NgxEditorModule } from 'ngx-editor';
 import { FileUploadModule } from 'ng2-file-upload';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { TableFilterPipe } from '.././table-filter.pipe';
@@ -20,6 +19,8 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatSortModule } from '@angular/material/sort';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [TableFilterPipe,IssueCreateComponent, UserDashboardComponent, IssueEditComponent, IssueViewComponent],
@@ -34,6 +35,8 @@ import { MatButtonModule } from '@angular/material/button';
     MatButtonModule,
     MatInputModule,
     MatTableModule,
+    MatSortModule,
+    MatPaginatorModule,
     MatSelectModule,
     NgxPaginationModule,
     DemoMaterialModule,

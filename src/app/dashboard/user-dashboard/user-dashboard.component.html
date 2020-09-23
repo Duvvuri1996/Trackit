@@ -29,108 +29,148 @@
         Notifications <span class="badge badge-dark" *ngIf="!notify" style="color: blanchedalmond;">{{count.length}}</span>
       </button>
       <div aria-labelledby="dropdownMenuButton" class="dropdown-menu">
-        <a *ngFor="let x of notifyData.slice().reverse()" style="color: black;" (click)="goToViewDashboard(x.issueId)">{{x.description}}</a>
+        <a *ngFor="let x of notifyData" style="color: black;" (click)="goToViewDashboard(x.issueId)">{{x.description}}</a>
       </div>
     </div>
     <button class="btn btn-outline-dark btn-lg" type="submit" (click)="goToCreateDashboard()">Create Issue</button>
   </div>
  
-
-  <div class = "container" style = "border: 2px solid black; padding : 1em; border-radius : 20px; margin-bottom : 20px" *ngIf="!toggler">
-  <h2 style="text-align: center;height: 50px; padding: 0.3em; color: black;">Search result</h2>
-  <div class="container-fluid scrolling-wrapper-flexbox">
-    <table  matSort (matSortChange)="sortData($event)"  class ="table table-bordered table-md" style = "height: 100px; overflow: auto; width :100%">
-    <thead>
-      <tr>
-        <th mat-sort-header="issueTitle"class = "th-md">Title</th>
-        <th mat-sort-header="userName"class = "th-md">Reporter</th>
-        <th mat-sort-header="status"class = "th-md">Status</th>
-        <th mat-sort-header="createdOn"class = "th-md">Created on </th>
-        <th class = "th-sm">View Issue</th>
-      </tr>
-    </thead>
-    <tbody id="myTable">
-      <tr *ngFor="let search of searchData.slice().reverse()  | paginate : {  itemsPerPage: 5, currentPage: p }">
-        <td>{{search.issueTitle}}</td>
-        <td>{{search.userName}}</td>
-        <td>{{search.status}}</td>
-        <td>{{search.createdOn | date}}</td>
-        <td><a (click)="goToViewDashboard(search.issueId)" >View Issue</a></td>
-      </tr>
-    </tbody>
-    </table>
+  
+  <div *ngIf = "!toggler && watchToggle && watchDetails ">
+  <div class = "container" style = "border: 2px solid black; padding : 1em; border-radius : 20px; margin-bottom : 20px">
+    <h2 style="text-align: center;height: 50px; padding: 0.3em; color: black;">Your Watchlist</h2>
+    <div class="filter">
+      <mat-form-field>
+        <input matInput (keyup)="applyFilter2($event.target.value)" placeholder="Filter">
+      </mat-form-field>
+    </div>
+    <mat-table [dataSource]="dataSource2" matSort >
+      <ng-container  matColumnDef="issueTitle">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Title</mat-header-cell>
+        <mat-cell *matCellDef="let data">{{data.issueTitle}}</mat-cell>
+    </ng-container>
+    <ng-container  matColumnDef="userName">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Reporter</mat-header-cell>
+      <mat-cell *matCellDef="let data">{{data.userName}}</mat-cell>
+    </ng-container>
+    <ng-container  matColumnDef="status">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
+      <mat-cell *matCellDef="let data">{{data.status}}</mat-cell>
+    </ng-container>
+    <ng-container  matColumnDef="createdOn">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>CreatedOn</mat-header-cell>
+      <mat-cell *matCellDef="let data">{{data.createdOn | date}}</mat-cell>
+    </ng-container>
+    <ng-container  matColumnDef="issueId">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>View</mat-header-cell>
+      <mat-cell *matCellDef="let data" ><a (click)="goToViewDashboard(data.issueId)">View-Issue</a></mat-cell>
+    </ng-container>
     
+    <mat-header-row *matHeaderRowDef="tableColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: tableColumns"></mat-row>
+      </mat-table>
+      <mat-paginator
+    
+    [showFirstLastButtons]="true"
+    [pageSize]="10"
+    [showFirstLastButtons]="true"
+    [length]="5"
+  ></mat-paginator>
+  </div>
+  <div style="display: flex; justify-content: space-between">
+    <button class="btn btn-outline-dark my-2 my-sm-0" type="submit" style="float: right;" (click)="back()">Go Back</button> 
+  </div>
   </div>
   
-  <div style="display: flex; justify-content: space-between">
-    <pagination-controls (pageChange)="p = $event"></pagination-controls>
-    <button class="btn btn-outline-dark my-2 my-sm-0" type="submit" (click)="back()">Go Back</button>
-    
-  </div>
-</div>
+
+
 <div  *ngIf="toggler && !watchToggle">
 <div class = "container" style = "border: 2px solid black; padding : 1em; border-radius : 20px; margin-bottom : 20px">
   <h2 style="text-align: center;height: 50px; padding: 0.3em; color: black;">Issues Assigned to You</h2>
-  <div class="container-fluid scrolling-wrapper-flexbox" >
-    <table  matSort (matSortChange)="sortDataIssues($event)"  class ="table table-bordered table-md" style = "height: 100px; overflow: auto; width :100%">
-    <thead>
-      <tr>
-        <th mat-sort-header="issueTitle"class = "th-md">Title</th>
-        <th mat-sort-header="userName"class = "th-md">Reporter</th>
-        <th mat-sort-header="status"class = "th-md">Status</th>
-        <th mat-sort-header="createdOn"class = "th-md">Created on </th>
-        <th class = "th-sm">View Issue</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let issue of allIssues  | paginate : {  itemsPerPage: 5, currentPage: p }">
-        <td>{{issue.issueTitle}}</td>
-        <td>{{issue.userName}}</td>
-        <td>{{issue.status}}</td>
-        <td>{{issue.createdOn | date}}</td>
-        <td><a (click)="goToViewDashboard(issue.issueId)" >View Issue</a></td>
-      </tr>
-    </tbody>
-    </table>
+  <div class="filter">
+    <mat-form-field>
+      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+    </mat-form-field>
   </div>
-</div>
-  <div style="display: flex; justify-content: space-between">
-    <pagination-controls (pageChange)="p = $event"></pagination-controls>
-    <button class="btn btn-outline-dark my-2 my-sm-0" type="submit" (click)="back()">Go Back</button>
-    
-  </div>
-</div>
-<div *ngIf = "watchToggle && watchDetails && !toggler">
-  <div class = "container" style = "border: 2px solid black; padding : 1em; border-radius : 20px; margin-bottom : 20px">
-    <h2 style="text-align: center;height: 50px; padding: 0.3em; color: black;">Watch Issues</h2>
-    <div class="container-fluid scrolling-wrapper-flexbox" >
-      <table  matSort (matSortChange)="sortDataWatch($event)"  class ="table table-bordered table-md" style = "height: 100px; overflow: auto; width :100%">
-      <thead>
-        <tr>
-          <th mat-sort-header="issueTitle"class = "th-md">Title</th>
-          <th mat-sort-header="userName"class = "th-md">Reporter</th>
-          <th class = "th-sm">View Issue</th>
-          <th mat-sort-header="status"class = "th-md">Status</th>
-          <th mat-sort-header="createdOn"class = "th-md">Created on </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let watch of watchDetails | paginate : {  itemsPerPage: 5, currentPage: p }">
-          <td>{{watch.issueTitle}}</td>
-          <td>{{watch.userName}}</td>
-          <td>{{watch.status}}</td>
-          <td>{{watch.createdOn | date}}</td>
-          <td><a (click)="goToViewDashboard(watch.issueId)" >View Issue</a></td>
-        </tr>
-      </tbody>
-      </table>
-    </div>
-    <div style="display: flex; justify-content: space-between">
-      <pagination-controls (pageChange)="p = $event"></pagination-controls>
-      <button class="btn btn-outline-dark my-2 my-sm-0" type="submit" (click)="back()">Go Back</button>
-      
-    </div>
-  </div>
+  <mat-table [dataSource]="dataSource" matSort >
+    <ng-container  matColumnDef="issueTitle">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Title</mat-header-cell>
+      <mat-cell *matCellDef="let data">{{data.issueTitle}}</mat-cell>
+  </ng-container>
+  <ng-container  matColumnDef="userName">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Reporter</mat-header-cell>
+    <mat-cell *matCellDef="let data">{{data.userName}}</mat-cell>
+  </ng-container>
+  <ng-container  matColumnDef="status">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
+    <mat-cell *matCellDef="let data">{{data.status}}</mat-cell>
+  </ng-container>
+  <ng-container  matColumnDef="createdOn">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>CreatedOn</mat-header-cell>
+    <mat-cell *matCellDef="let data">{{data.createdOn | date}}</mat-cell>
+  </ng-container>
+  <ng-container  matColumnDef="issueId">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>View</mat-header-cell>
+    <mat-cell *matCellDef="let data" ><a (click)="goToViewDashboard(data.issueId)">View-Issue</a></mat-cell>
+  </ng-container>
   
+  <mat-header-row *matHeaderRowDef="tableColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: tableColumns"></mat-row>
+    </mat-table>
+    <mat-paginator
+  
+  [showFirstLastButtons]="true"
+  [pageSize]="10"
+  [showFirstLastButtons]="true"
+  [length]="5"
+></mat-paginator>
+</div>
+</div>
+
+
+<div *ngIf="!toggler && !watchToggle ">
+  <div class = "container" style = "border: 2px solid black; padding : 1em; border-radius : 20px; margin-bottom : 20px">
+    <h2 style="text-align: center;height: 50px; padding: 0.3em; color: black;">Search Results</h2>
+    <div class="filter">
+      <mat-form-field>
+        <input matInput (keyup)="applyFilter1($event.target.value)" placeholder="Filter">
+      </mat-form-field>
+    </div>
+    <mat-table [dataSource]="dataSource1" matSort >
+      <ng-container  matColumnDef="issueTitle">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Title</mat-header-cell>
+        <mat-cell *matCellDef="let data">{{data.issueTitle}}</mat-cell>
+    </ng-container>
+    <ng-container  matColumnDef="userName">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Reporter</mat-header-cell>
+      <mat-cell *matCellDef="let data">{{data.userName}}</mat-cell>
+    </ng-container>
+    <ng-container  matColumnDef="status">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
+      <mat-cell *matCellDef="let data">{{data.status}}</mat-cell>
+    </ng-container>
+    <ng-container  matColumnDef="createdOn">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>CreatedOn</mat-header-cell>
+      <mat-cell *matCellDef="let data">{{data.createdOn | date}}</mat-cell>
+    </ng-container>
+    <ng-container  matColumnDef="issueId">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>View</mat-header-cell>
+      <mat-cell *matCellDef="let data" ><a (click)="goToViewDashboard(data.issueId)">View-Issue</a></mat-cell>
+    </ng-container>
+    
+    <mat-header-row *matHeaderRowDef="tableColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: tableColumns"></mat-row>
+      </mat-table>
+      <mat-paginator
+    
+    [showFirstLastButtons]="true"
+    [pageSize]="10"
+    [showFirstLastButtons]="true"
+    [length]="5"
+  ></mat-paginator>
+  </div>
+  <div style="display: flex; justify-content: space-between">
+    <button class="btn btn-outline-dark my-2 my-sm-0" type="submit" style="float: right;" (click)="back()">Go Back</button> 
+  </div>
 </div>
 </body>
